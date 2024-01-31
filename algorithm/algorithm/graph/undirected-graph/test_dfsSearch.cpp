@@ -1,7 +1,7 @@
 #include "dfsSearch.h"
-#include <cassert>
+#include "catch.hpp"
 
-int main() {
+TEST_CASE("Test DfsSearch", "[dfs]") {
     UndirectedGraphWithoutWeight graph(6); // Create a graph with 6 vertices
     graph.AddEdge(0, 1); // Add edges
     graph.AddEdge(0, 2);
@@ -14,9 +14,9 @@ int main() {
 
     // Check if all vertices are marked
     for (int i = 0; i < 6; i++) {
-        assert(dfsSearch.Marked(i) == true);
+        REQUIRE(dfsSearch.Marked(i) == true);
     }
 
     // Check the count
-    assert(dfsSearch.Count() == 6);
+    REQUIRE(dfsSearch.Count() == 6);
 }

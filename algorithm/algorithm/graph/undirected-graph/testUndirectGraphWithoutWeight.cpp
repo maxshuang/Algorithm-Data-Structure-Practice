@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
 #include "undirectGraphWithoutWeight.h"
 
-int main() {
+ TEST_CASE("Test UndirectedGraphWithoutWeight basic attributes", "[graph]"){
     // Create a graph with 5 vertices
     UndirectedGraphWithoutWeight graph(5);
 
@@ -17,25 +19,18 @@ int main() {
     graph.Show();
 
     // Get the number of vertices and edges
-    int numVertices = graph.V();
-    int numEdges = graph.E();
-    printf("Number of vertices: %d\n", numVertices);
-    printf("Number of edges: %d\n", numEdges);
+    REQUIRE(graph.V()==5);
+    REQUIRE(graph.E()==5);
 
     // Get the degree of a vertex
-    int vertexDegree = graph.Degree(3);
-    printf("Degree of vertex 3: %d\n", vertexDegree);
+    REQUIRE(graph.Degree(3)==3);
 
     // Get the maximum degree in the graph
-    int maxDegreeValue =  graph.MaxDegree();
-    printf("Maximum degree: %d\n", maxDegreeValue);
+    REQUIRE(graph.MaxDegree()==3);
 
     // Get the average degree in the graph
-    int avgDegreeValue = graph.AvgDegree();
-    printf("Average degree: %d\n", avgDegreeValue);
+    REQUIRE(int(graph.AvgDegree())==2);
 
     // Get the number of self-loops in the graph
-    int numSelfLoops = graph.NumberOfSelfLoops();
-    printf("Number of self-loops: %d\n", numSelfLoops);
-    return 0;
+    REQUIRE(graph.NumberOfSelfLoops()==0);
 }

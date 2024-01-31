@@ -154,7 +154,7 @@ float UndirectedGraphWithoutWeight::AvgDegree() const{
 int UndirectedGraphWithoutWeight::NumberOfSelfLoops() const {
     int count = 0;
     for (int i = 0; i < this->v; i++) {
-        for (const Edge& edge : this->edgeLists[v]) {
+        for (const Edge& edge : this->edgeLists[i]) {
             if (edge.Dest() == i) {
                 count++;
             }
