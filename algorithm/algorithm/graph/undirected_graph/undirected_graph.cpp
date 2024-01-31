@@ -1,4 +1,3 @@
-
 /**
  * @file basic.c
  * @brief Implementation of basic operations for an undirected graph without edge weights.
@@ -6,19 +5,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "undirectGraphWithoutWeight.h"
+#include "undirected_graph.h"
 
-UndirectedGraphWithoutWeight::UndirectedGraphWithoutWeight(int V): v(V), e(0){
+UndirectedGraph::UndirectedGraph(int V): v_(V), e_(0){
     if (V <= 0) {
         printf("Invalid number of vertices\n");
         return;
     }
-    this->edgeLists.resize(V);
+    this->edge_lists.resize(V);
 }
 
-UndirectedGraphWithoutWeight::~UndirectedGraphWithoutWeight(){
-    for (int i = 0; i < this->v; i++) {
-        this->edgeLists[i].clear();
+UndirectedGraph::~UndirectedGraph(){
+    for (int i = 0; i < this->v_; i++) {
+        this->edge_lists[i].clear();
     }
 }
 
@@ -30,8 +29,8 @@ UndirectedGraphWithoutWeight::~UndirectedGraphWithoutWeight(){
  * @param w The index of the second vertex.
  * @return void
  */
-void UndirectedGraphWithoutWeight::addEdge(int v, int w) {
-    this->edgeLists[v].push_front(Edge(v,w));
+void UndirectedGraph::addEdge(int v, int w) {
+    this->edge_lists[v].push_front(Edge(v,w));
 }
 
 /**
@@ -42,14 +41,14 @@ void UndirectedGraphWithoutWeight::addEdge(int v, int w) {
  * @param w The index of the second vertex.
  * @return void
  */
-void UndirectedGraphWithoutWeight::AddEdge(int v, int w) {
-    if (v < 0 || v >= this->v || w < 0 || w >= this->v) {
+void UndirectedGraph::AddEdge(int v, int w) {
+    if (v < 0 || v >= this->v_ || w < 0 || w >= this->v_) {
         printf("Invalid vertex\n");
         return;
     }
     addEdge(v, w);
     addEdge(w, v);
-    this->e++;
+    this->e_++;
 }
 
 /**
@@ -58,8 +57,8 @@ void UndirectedGraphWithoutWeight::AddEdge(int v, int w) {
  * @param graph The graph.
  * @return The number of vertices.
  */
-int UndirectedGraphWithoutWeight::V() const{
-    return this->v;
+int UndirectedGraph::V() const{
+    return this->v_;
 }
 
 /**
@@ -68,8 +67,8 @@ int UndirectedGraphWithoutWeight::V() const{
  * @param graph The graph.
  * @return The number of edges.
  */
-int UndirectedGraphWithoutWeight::E() const{
-    return this->e;
+int UndirectedGraph::E() const{
+    return this->e_;
 }
 
 /**
@@ -79,12 +78,12 @@ int UndirectedGraphWithoutWeight::E() const{
  * @param v The index of the vertex.
  * @return A const reference to the first edge connected to the vertex.
  */
-std::forward_list<Edge> UndirectedGraphWithoutWeight::Adj(int v) const {
-    if (v < 0 || v >= this->v) {
+std::forward_list<Edge> UndirectedGraph::Adj(int v) const {
+    if (v < 0 || v >= this->v_) {
         printf("Invalid vertex\n");
         return std::forward_list<Edge>();
     }
-    return this->edgeLists[v];
+    return this->edge_lists[v];
 }
 
 /**
@@ -92,10 +91,10 @@ std::forward_list<Edge> UndirectedGraphWithoutWeight::Adj(int v) const {
  * 
  * @return void
  */
-void UndirectedGraphWithoutWeight::Show() const {
-    for (int i = 0; i < this->v; i++) {
+void UndirectedGraph::Show() const {
+    for (int i = 0; i < this->v_; i++) {
         printf("%d: ", i);
-        for (const Edge& edge : this->edgeLists[i]) {
+        for (const Edge& edge : this->edge_lists[i]) {
             printf("%d ", edge.Dest());
         }
         printf("\n");
@@ -108,13 +107,13 @@ void UndirectedGraphWithoutWeight::Show() const {
  * @param v The index of the vertex.
  * @return The degree of the vertex.
  */
-int UndirectedGraphWithoutWeight::Degree(int v) const{
-    if (v < 0 || v >= this->v) {
+int UndirectedGraph::Degree(int v) const{
+    if (v < 0 || v >= this->v_) {
         printf("Invalid vertex\n");
         return -1;
     }
     int deg = 0;
-    for (const Edge& edge : this->edgeLists[v]) {
+    for (const Edge& edge : this->edge_lists[v]) {
         deg++;
     }
     return deg;
@@ -125,9 +124,9 @@ int UndirectedGraphWithoutWeight::Degree(int v) const{
  * 
  * @return The maximum degree.
  */
-int UndirectedGraphWithoutWeight::MaxDegree() const{
+int UndirectedGraph::MaxDegree() const{
     int max = 0;
-    for (int i = 0; i < this->v; i++) {
+    for (int i = 0; i < this->v_; i++) {
         int deg = this->Degree(i);
         if (deg > max) {
             max = deg;
@@ -141,20 +140,20 @@ int UndirectedGraphWithoutWeight::MaxDegree() const{
  * 
  * @return The average degree.
  */
-float UndirectedGraphWithoutWeight::AvgDegree() const{
-    return 2 * (float)this->e / this->v;
+float UndirectedGraph::AvgDegree() const{
+    return 2 * (float)this->e_ / this->v_;
 }
 
 /**
  * @brief Returns the number of self-loops in the graph.
  * 
  * @param graph The graph.
- * @return The number of self-loops.
+ * @return The number of self-loops../
  */
-int UndirectedGraphWithoutWeight::NumberOfSelfLoops() const {
+int UndirectedGraph::NumberOfSelfLoops() const {
     int count = 0;
-    for (int i = 0; i < this->v; i++) {
-        for (const Edge& edge : this->edgeLists[i]) {
+    for (int i = 0; i < this->v_; i++) {
+        for (const Edge& edge : this->edge_lists[i]) {
             if (edge.Dest() == i) {
                 count++;
             }

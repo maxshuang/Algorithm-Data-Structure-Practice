@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file undirectGraphWithoutWeight.h
+ * @file undirected_graph.h
  * @brief Header file for an undirected graph without edge weights.
  */
 #include <vector>
@@ -21,16 +21,16 @@ private:
 };
 
 /**
- * @struct UndirectedGraphWithoutWeight
+ * @struct UndirectedGraph
  * @brief Represents an undirected graph without edge weights.
  */
-class UndirectedGraphWithoutWeight {
+class UndirectedGraph {
 //
 // behavior
 //
 public:
-    UndirectedGraphWithoutWeight(int V);
-    ~UndirectedGraphWithoutWeight();
+    UndirectedGraph(int V);
+    ~UndirectedGraph();
     void AddEdge(int v, int w);
     int V() const;
     int E() const;
@@ -47,7 +47,7 @@ private:
 //  implementation
 //
 private:
-    const int v;                /**< The number of vertices in the graph. */
-    int e;                      /**< The number of edges in the graph. */
-    std::vector<std::forward_list<Edge>> edgeLists;  /**< Array of linked lists to store the edges for each vertex. */
+    const int v_;                /**< The number of vertices in the graph. */
+    int e_;                      /**< The number of edges in the graph. */
+    std::vector<std::forward_list<Edge>> edge_lists;  /**< Array of linked lists to store the edges for each vertex. */
 };

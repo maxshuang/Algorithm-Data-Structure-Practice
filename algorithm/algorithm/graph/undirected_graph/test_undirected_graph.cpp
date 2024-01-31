@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
-#include "undirectGraphWithoutWeight.h"
+#include "undirected_graph.h"
 
- TEST_CASE("Test UndirectedGraphWithoutWeight basic attributes", "[graph]"){
+ TEST_CASE("Test UndirectedGraph basic attributes", "[graph]"){
     // Create a graph with 5 vertices
-    UndirectedGraphWithoutWeight graph(5);
+    UndirectedGraph graph(5);
 
     // Add edges between vertices
     graph.AddEdge(0, 1);

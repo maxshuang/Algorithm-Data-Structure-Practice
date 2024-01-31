@@ -1,8 +1,8 @@
-#include "dfsSearch.h"
+#include "dfs_search.h"
 #include "catch.hpp"
 
 TEST_CASE("Test DfsSearch", "[dfs]") {
-    UndirectedGraphWithoutWeight graph(6); // Create a graph with 6 vertices
+    UndirectedGraph graph(6); // Create a graph with 6 vertices
     graph.AddEdge(0, 1); // Add edges
     graph.AddEdge(0, 2);
     graph.AddEdge(1, 3);
