@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML5 Elements</title>
+</head>
+<body>
+    <h1>HTML5 Elements</h1>
+
+    
+
+
+
+
+    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var context = canvas.getContext("2d");
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        var radius = 50;
+
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.fillStyle = "red";
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = "black";
+        context.stroke();
+    </script>
+    <audio controls>
+        <source src="audio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <video controls width="320" height="240"></video>
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video element.
+    </video>
+
+    <track src="subtitles.vtt" kind="subtitles" srclang="en" label="English">
+
+    <progress value="50" max="100"></progress>
+
+    <meter value="0.6"></meter>
+
+    <details>
+        <summary>Click me to see more information</summary>
+        <p>Additional details can be shown or hidden here.</p>
+    </details>
+
+    <output for="rangeInput"></output>
+    <svg width="200" height="200">
+        <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;" />
+    </svg>
+
+    <datalist id="browsers"></datalist>
+        <option value="Chrome">
+        <option value="Firefox">
+        <option value="Safari">
+        <option value="Opera">
+        <option value="Edge">
+    </datalist>
+
+    <input type="range" id="rangeInput" name="rangeInput" min="0" max="100" list="browsers">
+
+    <div>
+        <h2>Math Formula</h2>
+        <p>Here is a LaTeX element for math:</p>
+        <p>\(E = mc^2\)</p>
+    </div>
+
+</body>
+</html>
+    <input type="range" id="rangeInput" name="rangeInput" min="0" max="100" list="browsers">
+
+</body>
+</html>
