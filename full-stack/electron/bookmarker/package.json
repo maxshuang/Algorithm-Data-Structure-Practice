@@ -1,0 +1,15 @@
+{
+  "name": "bookmarker",
+  "version": "1.0.0",
+  "description": "first Electron application",
+  "main": "./app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "maxshuang",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.2.1"
+  }
+}
