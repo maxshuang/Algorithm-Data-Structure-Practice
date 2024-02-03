@@ -1,0 +1,16 @@
+{
+  "name": "firesale",
+  "version": "1.0.0",
+  "description": "firesale",
+  "main": "./app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "maxshuang",
+  "license": "MIT",
+  "devDependencies": {
+    "eletron": "^28.2.1",
+    "marked": "^11.2.0"
+  }
+}

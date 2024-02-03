@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug bookmarker Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/full-stack/electron/bookmarker",
+      "runtimeExecutable": "${workspaceFolder}/full-stack/electron/bookmarker/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/full-stack/electron/bookmarker/node_modules/.bin/electron.cmd"
+      },
+      "args" : ["."]
+    },
+    {
+      "name": "Debug firesale Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/full-stack/electron/firesale",
+      "runtimeExecutable": "${workspaceFolder}/full-stack/electron/firesale/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/full-stack/electron/firesale/node_modules/.bin/electron.cmd"
+      },
+      "args" : ["."]
+    },
+  ]
+}

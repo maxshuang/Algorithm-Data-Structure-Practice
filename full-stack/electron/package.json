@@ -1,0 +1,11 @@
+{
+    "private": true,
+    "workspaces": [
+        "bookmarker",
+        "firesale"
+    ],
+    "dependencies": {
+        "eletron": "^28.2.1",
+        "marked": "^11.2.0"
+    }
+}
