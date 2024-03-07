@@ -8,7 +8,7 @@ TEST_CASE("Test insertion_sort", "[sort]") {
         int expected[] = {};
         int size = sizeof(arr) / sizeof(arr[0]);
 
-        insertion_sort(arr, size);
+        insertion_sort_compact(arr, size);
 
         REQUIRE(std::equal(arr, arr + size, expected));
     }
@@ -18,7 +18,7 @@ TEST_CASE("Test insertion_sort", "[sort]") {
         int expected[] = {1, 2, 3, 4, 5};
         int size = sizeof(arr) / sizeof(arr[0]);
 
-        insertion_sort(arr, size);
+        insertion_sort_compact(arr, size);
 
         REQUIRE(std::equal(arr, arr + size, expected));
     }
@@ -28,7 +28,7 @@ TEST_CASE("Test insertion_sort", "[sort]") {
         int expected[] = {1, 2, 3, 4, 5};
         int size = sizeof(arr) / sizeof(arr[0]);
 
-        insertion_sort(arr, size);
+        insertion_sort_compact(arr, size);
 
         REQUIRE(std::equal(arr, arr + size, expected));
     }
@@ -38,7 +38,7 @@ TEST_CASE("Test insertion_sort", "[sort]") {
         int expected[] = {1, 2, 3, 4, 5};
         int size = sizeof(arr) / sizeof(arr[0]);
 
-        insertion_sort(arr, size);
+        insertion_sort_compact(arr, size);
 
         REQUIRE(std::equal(arr, arr + size, expected));
     }
