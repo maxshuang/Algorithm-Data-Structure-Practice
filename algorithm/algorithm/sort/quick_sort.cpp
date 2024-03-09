@@ -23,7 +23,8 @@ void quick_sort_range(int *vec, int l, int r)
 {
     if (l >= r)
         return;
-    int m = partition_compact(vec, l, r);
+    //int m = partition_compact(vec, l, r);
+    int m = partition_wrong2(vec, l, r);
     quick_sort_range(vec, l, m - 1);
     quick_sort_range(vec, m + 1, r);
 
@@ -68,26 +69,24 @@ int partition_wrong(int *vec, int l, int r)
 // This implement is hard to understand because keeping no invariant during the while process
 int partition_wrong2(int *vec, int l, int r)
 {
-    int pivot = pivot_func2(vec, l, r);
-    int i = l, j = r;
-    while (i < j)
+    int pivot = vec[l]; 
+    // Initial: keep the invariant: [l, i)<=pivot, [i, j] not sure, (j, r] > pivot
+    int i = l+1, j = r;
+    while (i <= j)
     {
-        // std::cout << "i:" << i << ",j:" << j << std::endl;
-        //  same value would exachange their positions here
-        while (vec[i] < pivot && i <= r)
-            i++;
-        while (vec[j] > pivot && j >= l)
-            j--;
-        if (i >= j)
-            break;
+        while (vec[i] <= pivot && i <= j) ++i;
+        while (vec[j] > pivot && j >= i) --j;
+        if (i < j) exchange(vec, i++, j--);
 
-        exchange(vec, i++, j--);
+        // Here: after each loop
+        // 1. if i<=j, keep the invariant because of the exchange
+        // 2. if i>j, vec[j]<=pivot, vec[i]>pivot or i==r+1, so keep the invariant
     }
 
-    // wrong: may be ...j,i...
-    // two conditions: i==j, or i==j+1
-    // problem here, don't know where is the pivot ???
-    return i;
+    // one conditions: i==j+1
+    // exchange l, j to keep vec[j]==pivot, still hold the invariant here    
+    exchange(vec, l, j);
+    return j;
 }
 
 int partition_wrong3(int *vec, int l, int r)
