@@ -14,7 +14,6 @@ double ff(double x) {
     return res;
 }
 
-
 int main() {
     std::cin >> N >> l >> r;
     for(int i=0; i<N+1; ++i) {
