@@ -1,4 +1,5 @@
 #include <queue>
+#include <algorithm>
 #include "bfs_path.h"
 
 BfsPaths::BfsPaths(const UndirectedGraph& G, int s): marked_(G.V(), false), edge_to_(G.V(), -1), source_(s) {
@@ -31,12 +32,14 @@ void BfsPaths::bfs(const UndirectedGraph& G, int v) {
         // to avoid "pop" throw out some exceptions 
         int x = q.front();
         q.pop();
-        for (const Edge& w : G.Adj(x)) {
-            if (!this->marked_[w.Dest()]) {
-                this->edge_to_[w.Dest()] = x;
-                this->marked_[w.Dest()] = true;
+        auto pair = G.Adj(x);
+        std::for_each(pair.first, pair.second, [&,x](const Edge& w){
+            if (!marked_[w.Dest()]) {
+                edge_to_[w.Dest()] = x;
+                // 放入队列之前就标记一下，避免重复访问
+                marked_[w.Dest()] = true;
                 q.push(w.Dest());
             }
-        }
+        });
     }
 }

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "dfs_path.h"
 
 DfsPaths::DfsPaths(const UndirectedGraph& G, int s): marked_(G.V(), false), edge_to_(G.V(), -1), source_(s) {
@@ -23,10 +24,12 @@ std::vector<int> DfsPaths::PathTo(int v) const {
 
 void DfsPaths::dfs(const UndirectedGraph& G, int v) {
     this->marked_[v] = true;
-    for (const Edge& w : G.Adj(v)) {
-        if (!this->marked_[w.Dest()]) {
-            this->edge_to_[w.Dest()] = v;
+    auto pair = G.Adj(v);
+    // 深度遍历在递归，由于没有排队，所以在每次递归的时候直接设置访问标志即可
+    std::for_each(pair.first, pair.second, [&, v](const Edge& w){
+        if (!marked_[w.Dest()]) {
+            edge_to_[w.Dest()] = v;
             dfs(G, w.Dest());
         }
-    }
+    });
 }

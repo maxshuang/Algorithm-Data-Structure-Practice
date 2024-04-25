@@ -34,3 +34,4 @@
     // Get the number of self-loops in the graph
     REQUIRE(graph.NumberOfSelfLoops()==0);
 }
+

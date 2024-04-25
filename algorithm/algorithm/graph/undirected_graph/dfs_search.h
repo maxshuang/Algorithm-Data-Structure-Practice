@@ -11,8 +11,9 @@ public:
     bool Marked(int v) const;
     int Count() const;
 private:
+    // Time Complexity: O(V+E)
+    // Space Complexity: O(V)
     void dfs(const UndirectedGraph& graph, int v);
-
 //
 //  implementation
 //

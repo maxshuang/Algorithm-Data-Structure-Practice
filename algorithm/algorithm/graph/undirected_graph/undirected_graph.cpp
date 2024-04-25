@@ -78,12 +78,13 @@ int UndirectedGraph::E() const{
  * @param v The index of the vertex.
  * @return A const reference to the first edge connected to the vertex.
  */
-std::forward_list<Edge> UndirectedGraph::Adj(int v) const {
-    if (v < 0 || v >= this->v_) {
-        printf("Invalid vertex\n");
-        return std::forward_list<Edge>();
-    }
-    return this->edge_lists[v];
+std::pair<UndirectedGraph::const_iterator, UndirectedGraph::const_iterator> UndirectedGraph::Adj(int v) const{
+    //if (v < 0 || v >= this->v_) {
+    //    printf("Invalid vertex\n");
+    //    return std::forward_list<Edge>();
+    //}
+    //return Iterator<Edge>(this->edge_lists[v].begin(), this->edge_lists[v].end());
+    return std::make_pair(UndirectedGraph::const_iterator(this->edge_lists[v].begin()), UndirectedGraph::const_iterator(this->edge_lists[v].end()));
 }
 
 /**
