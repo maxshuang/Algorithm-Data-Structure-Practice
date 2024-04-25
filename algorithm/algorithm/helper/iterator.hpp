@@ -1,3 +1,4 @@
+#pragma once
 #include <forward_list>
 
 template <class T>
