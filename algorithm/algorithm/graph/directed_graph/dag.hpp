@@ -19,30 +19,24 @@ private:
         {
             if (!marked_[i])
             {
-                // start point of the dfs
-                edge_to_[i]=i;
-                dfs_recur(G, i);
-                edge_to_[i]=-1;
+                dfs_recur(G, i, i);
             }
         }
     }
 
-    void dfs_recur(const Digraph &G, int v)
+    void dfs_recur(const Digraph &G, int v, int from)
     {
         if(has_cycle_) return;
 
         marked_[v] = true;
+        edge_to_[v]=from;
         auto pair = G.Adj(v);
         std::for_each(pair.first, pair.second, [&](const Edge &e)
                       {
         if(has_cycle_) return;
 
         if(!marked_[e.Dest()]) {
-            // put it into the cycle path
-            edge_to_[e.Dest()]=e.Src();
-            dfs_recur(G, e.Dest());
-            // reverse back
-            edge_to_[e.Dest()]=-1;
+            dfs_recur(G, e.Dest(), e.Src());
         }else if(edge_to_[e.Dest()]!=-1){
             // hit the cycle
             has_cycle_=true;
@@ -50,7 +44,11 @@ private:
             edge_to_[e.Dest()]=e.Src();
             get_cycle(e.Src());
         } });
+    
+        edge_to_[v]=-1;
     }
+
+
     void get_cycle(int v)
     {
         cycle_.push_back(v);

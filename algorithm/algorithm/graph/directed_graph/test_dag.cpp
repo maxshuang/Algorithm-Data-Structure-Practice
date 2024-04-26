@@ -23,6 +23,14 @@ TEST_CASE("Test DAG", "[graph]")
         REQUIRE(dag.Cycle()==std::vector<int>{6, 5, 3, 2});
     }
 
+    SECTION("test has cycle")
+    {
+        g.AddEdge(6, 5);
+        DAG dag(g);
+        REQUIRE(dag.HasCycle());
+        REQUIRE(dag.Cycle() == std::vector<int>{6, 5});
+    }
+
     SECTION("test has two cycles") {
         g.AddEdge(6, 2);
         g.AddEdge(0, 7);
