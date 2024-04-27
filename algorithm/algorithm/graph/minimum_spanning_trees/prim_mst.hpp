@@ -1,40 +1,38 @@
+#pragma once
 #include <queue>
 #include <algorithm>
 #include "undirected_graph/undirected_graph.h"
+#include "edge_comp.hpp"
+#include "index_priority_queue.h"
 
 // Proposition J. ( Cut property) Given any cut in an edge-weighted graph, the crossing edge of minimum weight is in
 // the MST of the graph.
+// Cut edge: vertices are in different cut
+// Time Complexity: O(V*logE), Space Complexity: O(V)
 
-struct EdgeComp
-{
-    bool operator()(const Edge &l, const Edge &r) const { return l.Weight() > r.Weight(); }
-};
+// The key idea of PrimMST compared to LazyPrimMST is that it only maintains shortest edge of mst's vertices
 
 // Prim’s algorithm
-class MST
+class PrimMST
 {
 public:
     // assume the graph is a connected graph
-    MST(const UndirectedGraph &g) : marked_(g.V(), false)
+    PrimMST(const UndirectedGraph &g) : marked_(g.V(), false)
     {
         // initialize and build a cut
-        auto pair = g.Adj(0);
-        std::for_each(pair.first, pair.second, [&](const Edge &e)
-                      { pq_.push(e); });
-        marked_[0] = true;
+        visit(g, 0);
 
         while (!pq_.empty() && !finished())
         {
             auto e = pq_.top();
             pq_.pop();
+            // There are some edges which are put into the queue before, but not cut edge now.
+            // ignore the non-cut edges here
             if (!marked_[e.Dest()])
             {
                 mst_.push_back(e);
                 mst_weight_ += e.Weight();
-                marked_[e.Dest()] = true;
-                auto pair = g.Adj(e.Dest());
-                std::for_each(pair.first, pair.second, [&](const Edge &e)
-                              { if(!marked_[e.Dest()]) pq_.push(e); });
+                visit(g, e.Dest());
             }
         }
     }
@@ -43,6 +41,14 @@ public:
 
 private:
     bool finished() const { return mst_.size() == marked_.size() - 1; }
+    void visit(const UndirectedGraph &g, int v)
+    {
+        marked_[v] = true;
+        auto pair = g.Adj(v);
+        // ignore the non-cut edges here if possible
+        std::for_each(pair.first, pair.second, [&](const Edge &e)
+                      { if(!marked_[e.Dest()])  pq_.push(e); });
+    }
 
 private:
     std::vector<int> marked_;
@@ -50,5 +56,5 @@ private:
     double mst_weight_;
     // priority_queue is originally a maximum heap with std::less
     // need change to minimum heap
-    std::priority_queue<Edge, std::vector<Edge>, EdgeComp> pq_;
+    IndexPriorityMinQueue<Edge, std::vector<Edge>, EdgeComp> pq_;
 };
