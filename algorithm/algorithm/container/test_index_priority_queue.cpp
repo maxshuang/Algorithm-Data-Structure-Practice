@@ -1,6 +1,6 @@
 // #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "index_priority_queue.h"
+#include "index_priority_queue.hpp"
 
 TEST_CASE("Test MAX IndexPriorityQueue", "[MAX]")
 {

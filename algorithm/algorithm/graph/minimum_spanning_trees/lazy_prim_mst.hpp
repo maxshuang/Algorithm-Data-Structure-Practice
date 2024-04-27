@@ -14,7 +14,7 @@ class LazyPrimMST
 {
 public:
     // assume the graph is a connected graph
-    PrimMST(const UndirectedGraph &g) : marked_(g.V(), false)
+    LazyPrimMST(const UndirectedGraph &g) : marked_(g.V(), false), mst_weight_(0.0)
     {
         // initialize and build a cut
         visit(g, 0);
@@ -25,6 +25,7 @@ public:
             pq_.pop();
             // There are some edges which are put into the queue before, but not cut edge now.
             // ignore the non-cut edges here
+            // 之前的一些 edge 会不再是 cut edge
             if (!marked_[e.Dest()])
             {
                 mst_.push_back(e);
@@ -48,7 +49,7 @@ private:
     }
 
 private:
-    std::vector<false> marked_;
+    std::vector<bool> marked_;
     std::vector<Edge> mst_;
     double mst_weight_;
     // priority_queue is originally a maximum heap with std::less

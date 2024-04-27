@@ -13,6 +13,8 @@
  */
 struct Edge
 {
+    // [FIXME](maxshuang)
+    Edge(): src(-1), dest(-1), weight(0) {}
     Edge(int s, int d) : src(s), dest(d), weight(0) {}
     Edge(int s, int d, double w) : src(s), dest(d), weight(w) {}
     int Src() const { return this->src; }
