@@ -19,10 +19,10 @@ class PrimMST
 {
 public:
     // assume the graph is a connected graph
-    PrimMST(const UndirectedGraph &g) : edge_to_(g.V(), -1), weight_to_(g.V(), std::numeric_limits<double>::infinity()), mst_weight_(0.0), pq_(g.V())
+    PrimMST(const UndirectedGraph &g) : marked_(g.V(), false), weight_to_(g.V(), std::numeric_limits<double>::infinity()), mst_weight_(0.0), pq_(g.V())
     {
         // initialize and build a cut
-        edge_to_[0] = 0;
+        weight_to_[0] = 0.0;
         visit(g, 0);
 
         while (!pq_.IsEmpty())
@@ -31,7 +31,6 @@ public:
             pq_.Pop();
             mst_.push_back(e);
             mst_weight_ += e.Weight();
-            edge_to_[e.Dest()] = e.Src();
             visit(g, e.Dest());
         }
     }
@@ -41,26 +40,23 @@ public:
 private:
     void visit(const UndirectedGraph &g, int v)
     {
+        marked_[v] = true;
         auto pair = g.Adj(v);
         std::for_each(pair.first, pair.second, [&](const Edge &e)
                       {
                         // crossing edge
-                        if(edge_to_[e.Dest()] == -1) {
+                        if(!marked_[e.Dest()]) {
                             // find a shorter edge to the mst nodes
-                            if(weight_to_[e.Dest()] > e.Weight()) {
-                                if(std::isinf(weight_to_[e.Dest()])) {
-                                    pq_.Insert(e.Dest(), e);
-                                }else {
-                                    pq_.Change(e.Dest(), e);
-                                }
+                            if(e.Weight() < weight_to_[e.Dest()]) {
                                 weight_to_[e.Dest()]=e.Weight();
+                                if(!pq_.ContainsIndex(e.Dest())) pq_.Insert(e.Dest(), e);
+                                else pq_.Change(e.Dest(), e);
                             }
                         } });
     }
 
 private:
-    // minimum spanning tree
-    std::vector<int> edge_to_;
+    std::vector<bool> marked_;
     // non-tree vertices's smallest weight to mst nodes
     std::vector<double> weight_to_;
     std::vector<Edge> mst_;
