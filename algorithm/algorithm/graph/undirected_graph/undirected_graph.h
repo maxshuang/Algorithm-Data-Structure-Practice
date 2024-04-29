@@ -15,8 +15,7 @@ struct Edge
 {
     // [FIXME](maxshuang)
     Edge(): src(-1), dest(-1), weight(0) {}
-    Edge(int s, int d) : src(s), dest(d), weight(0) {}
-    Edge(int s, int d, double w) : src(s), dest(d), weight(w) {}
+    Edge(int s, int d, double w=0.0) : src(s), dest(d), weight(w) {}
     int Src() const { return this->src; }
     int Dest() const { return this->dest; }
     double Weight() const { return this->weight; }
@@ -47,7 +46,10 @@ public:
     void AddEdge(int s, int t, double w = 0);
     int V() const;
     int E() const;
+    // [FIXME]
     std::pair<const_iterator, const_iterator> Adj(int v) const;
+    // [FIXME]
+    std::pair<const_iterator, const_iterator> Edges();
     int Degree(int v) const;
     int MaxDegree() const;
     float AvgDegree() const;
@@ -63,5 +65,6 @@ private:
     const int v_; /**< The number of vertices in the graph. */
     int e_;       /**< The number of edges in the graph. */
     // 其实对于不关注路径权重的场景下，这里可以用点集即可，不用边集
-    std::vector<std::forward_list<Edge>> edge_lists; /**< Array of linked lists to store the edges for each vertex. */
+    std::vector<std::forward_list<Edge>> edge_lists_; /**< Array of linked lists to store the edges for each vertex. */
+    std::forward_list<Edge> edges_;
 };

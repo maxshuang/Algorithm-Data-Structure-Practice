@@ -14,15 +14,11 @@ UndirectedGraph::UndirectedGraph(int V) : v_(V), e_(0)
         printf("Invalid number of vertices\n");
         return;
     }
-    this->edge_lists.resize(V);
+    this->edge_lists_.resize(V);
 }
 
 UndirectedGraph::~UndirectedGraph()
 {
-    for (int i = 0; i < this->v_; i++)
-    {
-        this->edge_lists[i].clear();
-    }
 }
 
 /**
@@ -35,7 +31,7 @@ UndirectedGraph::~UndirectedGraph()
  */
 void UndirectedGraph::addEdge(int v, int w, double weight)
 {
-    this->edge_lists[v].push_front(Edge(v, w, weight));
+    this->edge_lists_[v].push_front(Edge(v, w, weight));
 }
 
 /**
@@ -89,12 +85,22 @@ int UndirectedGraph::E() const
  */
 std::pair<UndirectedGraph::const_iterator, UndirectedGraph::const_iterator> UndirectedGraph::Adj(int v) const
 {
-    // if (v < 0 || v >= this->v_) {
-    //     printf("Invalid vertex\n");
-    //     return std::forward_list<Edge>();
-    // }
-    // return Iterator<Edge>(this->edge_lists[v].begin(), this->edge_lists[v].end());
-    return std::make_pair(UndirectedGraph::const_iterator(this->edge_lists[v].begin()), UndirectedGraph::const_iterator(this->edge_lists[v].end()));
+    return std::make_pair(UndirectedGraph::const_iterator(this->edge_lists_[v].begin()), UndirectedGraph::const_iterator(this->edge_lists_[v].end()));
+}
+
+std::pair<UndirectedGraph::const_iterator, UndirectedGraph::const_iterator> UndirectedGraph::Edges()
+{
+    if (edges_.empty())
+    {
+        for (auto &ls : edge_lists_)
+        {
+            for (auto &e : ls)
+            {
+                edges_.push_front(e);
+            }
+        }
+    }
+    return std::make_pair(UndirectedGraph::const_iterator(this->edges_.begin()), UndirectedGraph::const_iterator(this->edges_.end()));
 }
 
 /**
@@ -107,7 +113,7 @@ void UndirectedGraph::Show() const
     for (int i = 0; i < this->v_; i++)
     {
         printf("%d: ", i);
-        for (const Edge &edge : this->edge_lists[i])
+        for (const Edge &edge : this->edge_lists_[i])
         {
             printf("%d ", edge.Dest());
         }
@@ -129,7 +135,7 @@ int UndirectedGraph::Degree(int v) const
         return -1;
     }
     int deg = 0;
-    for (const Edge &edge : this->edge_lists[v])
+    for (const Edge &edge : this->edge_lists_[v])
     {
         deg++;
     }
@@ -176,7 +182,7 @@ int UndirectedGraph::NumberOfSelfLoops() const
     int count = 0;
     for (int i = 0; i < this->v_; i++)
     {
-        for (const Edge &edge : this->edge_lists[i])
+        for (const Edge &edge : this->edge_lists_[i])
         {
             if (edge.Dest() == i)
             {

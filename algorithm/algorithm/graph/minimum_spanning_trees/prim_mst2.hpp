@@ -10,11 +10,11 @@
 // Proposition J. ( Cut property) Given any cut in an edge-weighted graph, the crossing edge of minimum weight is in
 // the MST of the graph.
 // Cut edge: vertices are in different cut
-// Time Complexity: O(V*logE), Space Complexity: O(V)
+// Time Complexity: O(E*logV), Space Complexity: O(V)
 
 // The key idea of PrimMST compared to LazyPrimMST is that it only maintains shortest edge of mst's vertices
 
-// Prim’s algorithm
+// Prim’s algorithm(Greedy Algorithm)
 class PrimMST2
 {
 public:
