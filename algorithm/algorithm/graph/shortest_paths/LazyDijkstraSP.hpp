@@ -1,5 +1,5 @@
 #pragma once
-#include <priority_queue>
+#include <queue>
 #include <climits>
 #include <algorithm>
 #include "directed_graph/digraph.hpp"
@@ -7,32 +7,37 @@
 
 // Lazy Dijkstra shortest path will relax every edge untill there are no eligible edges
 
-#if 0
-
 class LazyDijkstraSP
 {
 public:
-    ShortestPath(const Digraph &g, int s) : edge_to(g.V()), dist_to_(g.V(), std::numeric_limits<double>::infinity())
+    LazyDijkstraSP(const Digraph &g, int s) : src_(s), edge_to_(g.V()), dist_to_(g.V(), std::numeric_limits<double>::infinity())
     {
-        visit(0);
+        dist_to_[s] = 0.0;
+        visit(g, s);
 
-        // ??? When will it stop? Why we need the edge with smallest edge??
         while (!pq_.empty())
         {
             auto e = pq_.top();
             pq_.pop();
-            double dist = dist_to_[e.Src()] + e.Weight();
-            if (dist < dist_to_[e.Dest()])
-            {
-                relax(e);
-                visit(g, e.Dest());
-            }
+            relax(g, e);
         }
     }
 
-    double DistTo(int v) const {}
-    bool hasPathTo(int v) const {}
-    std::vector<Edge> PathTo(int v) const {}
+    double DistTo(int v) const { return dist_to_[v]; }
+
+    bool HasPathTo(int v) const { return !std::isinf(dist_to_[v]); }
+
+    std::vector<Edge> PathTo(int v) const
+    {
+        std::vector<Edge> res;
+        while (v != src_)
+        {
+            res.push_back(edge_to_[v]);
+            v = edge_to_[v].Src();
+        }
+
+        return res;
+    }
 
 private:
     void visit(const Digraph &g, int v)
@@ -42,17 +47,21 @@ private:
                       { pq_.push(e); });
     }
 
-    void relax(const Edge &e)
+    void relax(const Digraph &g, const Edge &e)
     {
-        dist_to_[e.Dest()] = dist;
-        edge_to_[e.Dest()] = e.Src();
+        double dist = dist_to_[e.Src()] + e.Weight();
+        if (dist < dist_to_[e.Dest()])
+        {
+            dist_to_[e.Dest()] = dist;
+            edge_to_[e.Dest()] = e;
+            visit(g, e.Dest());
+        }
     }
 
 private:
-    std::priority_queue<Edge, EdgeComp> pq_;
+    int src_;
+    std::priority_queue<Edge, std::vector<Edge>, EdgeComp> pq_;
     // shortest path tree
     std::vector<Edge> edge_to_;
     std::vector<double> dist_to_;
 };
-
-#endif

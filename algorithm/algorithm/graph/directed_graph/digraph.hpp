@@ -12,11 +12,16 @@
  */
 struct Edge
 {
-    Edge(): src(-1), dest(-1), weight(0.0){}
+    Edge() : src(-1), dest(-1), weight(0.0) {}
     Edge(int s, int d, double w = 0) : src(s), dest(d), weight(w) {}
     int Src() const { return this->src; }
     int Dest() const { return this->dest; }
     double Weight() const { return this->weight; }
+
+    bool operator==(const Edge &other) const
+    {
+        return src == other.src && dest == other.dest && (weight - other.weight) < 0.0001;
+    }
 
 private:
     int src;  /**< The index of the source vertex. */
@@ -28,12 +33,12 @@ class Digraph
 {
 public:
     typedef ConstIterator2<Edge> const_iterator;
-    
+
     Digraph(int V) : edge_lists_(V), v_(V), e_(0) {}
     int V() const { return v_; }
     int E() const { return e_; }
-    
-    void AddEdge(int s, int t, double w=0)
+
+    void AddEdge(int s, int t, double w = 0)
     {
         edge_lists_[s].push_front(Edge(s, t, w));
         ++e_;

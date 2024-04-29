@@ -37,7 +37,7 @@ public:
     std::vector<Edge> PathTo(int v) const
     {
         std::vector<Edge> res;
-        while (edge_to_[v].Src() != src_)
+        while (v != src_)
         {
             res.push_back(edge_to_[v]);
             v = edge_to_[v].Src();

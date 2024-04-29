@@ -1,5 +1,8 @@
+#pragma once
+#include <cmath>
+#include <limits>
 
-template class T 
-bool Equal(const T& t, const T& o) {
-    
+inline bool DoubleEqual(double t, double o)
+{
+    return std::fabs(t - o) <= std::numeric_limits<double>::epsilon();
 }

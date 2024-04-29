@@ -4,7 +4,7 @@
 CC = g++
 
 # include
-TEST_INCLUDE = -I ../../helper/Catch2/include -I ../  -I ../../container
+TEST_INCLUDE = -I ../../helper/Catch2/include -I ../  -I ../../container -I ../../
 INCLUDE = -I /usr/include/c++/9 -I /usr/include/x86_64-linux-gnu/c++/9 -I ../../helper $(TEST_INCLUDE)
 
 # Compiler flags
