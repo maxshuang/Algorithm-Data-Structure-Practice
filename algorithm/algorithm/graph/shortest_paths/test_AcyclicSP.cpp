@@ -1,12 +1,11 @@
-#define CATCH_CONFIG_MAIN
 #include <limits>
 #include <cmath>
-#include "lazy_DijkstraSP.hpp"
+#include "acyclicSP.hpp"
 #include "directed_graph/digraph.hpp"
 #include "catch.hpp"
 #include "helper/float.hpp"
 
-TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
+TEST_CASE("Test AcyclicSP", "[shortest path]")
 {
     Digraph g(7);
     g.AddEdge(4, 6, 0.62);
@@ -21,7 +20,7 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 0")
     {
-        LazyDijkstraSP sp(g, 0);
+        AcyclicSP sp(g, 0);
         REQUIRE(!(sp.HasPathTo(1)));
         REQUIRE(!(sp.HasPathTo(3)));
         REQUIRE(!(sp.HasPathTo(5)));
@@ -32,11 +31,14 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
         REQUIRE(DoubleEqual(sp.DistTo(2), 0.22));
         REQUIRE(DoubleEqual(sp.DistTo(4), 0.64));
         REQUIRE(DoubleEqual(sp.DistTo(6), 0.39));
+
+        REQUIRE(sp.PathTo(2) == std::vector<Edge>{Edge{0, 2, 0.22}});
+        REQUIRE(sp.PathTo(6) == std::vector<Edge>{Edge{2, 6, 0.17}, Edge{0, 2, 0.22}});
     }
 
     SECTION("start from 1")
     {
-        LazyDijkstraSP sp(g, 1);
+        AcyclicSP sp(g, 1);
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(4)));
         REQUIRE(DoubleEqual(sp.DistTo(1), 0.0));
@@ -48,7 +50,7 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 2")
     {
-        LazyDijkstraSP sp(g, 2);
+        AcyclicSP sp(g, 2);
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(4)));
         REQUIRE(std::isinf(sp.DistTo(1)));
@@ -60,7 +62,7 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 3")
     {
-        LazyDijkstraSP sp(g, 3);
+        AcyclicSP sp(g, 3);
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(4)));
         REQUIRE(std::isinf(sp.DistTo(1)));
@@ -72,7 +74,7 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 4")
     {
-        LazyDijkstraSP sp(g, 4);
+        AcyclicSP sp(g, 4);
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(3)));
         REQUIRE(std::isinf(sp.DistTo(1)));
@@ -84,7 +86,7 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 5")
     {
-        LazyDijkstraSP sp(g, 5);
+        AcyclicSP sp(g, 5);
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(3)));
         REQUIRE(std::isinf(sp.DistTo(1)));
@@ -96,7 +98,10 @@ TEST_CASE("Test LazyDijkstraSP", "[shortest path]")
 
     SECTION("start from 6")
     {
-        LazyDijkstraSP sp(g, 6);
+        AcyclicSP sp(g, 6);
+        REQUIRE(!(sp.HasPathTo(0)));
+        REQUIRE(!(sp.HasPathTo(3)));
+        REQUIRE(!(sp.HasPathTo(5)));
         REQUIRE(std::isinf(sp.DistTo(0)));
         REQUIRE(std::isinf(sp.DistTo(3)));
         REQUIRE(std::isinf(sp.DistTo(1)));

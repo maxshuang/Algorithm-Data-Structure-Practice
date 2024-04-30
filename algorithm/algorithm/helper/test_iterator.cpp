@@ -88,6 +88,6 @@ TEST_CASE("iterator", "[iterator]"){
     {
         ConstIterator2<int> iter(fl.begin());
         ConstIterator2<int> iter_end(fl.end());
-        std::for_each(iter, iter_end, [](int& a){ std::cout << a << std::endl; });
+        std::for_each(iter, iter_end, [](const int& a){ std::cout << a << std::endl; });
     }
  }
