@@ -3,6 +3,11 @@
 #include "acyclicLP.hpp"
 
 // CPM(Critical Path Method) for Parallel job scheduling in DAG(Directed Acyclic Graph)
+// Parallel precedence-constrained scheduling. Given a set of jobs of specified duration to be completed, 
+// with precedence constraints that specify that certain jobs have to be completed before certain other jobs are begun, 
+// how can we schedule the jobs on identical processors (as many as needed ) such that they are all completed in the minimum amount of time 
+// while still respecting the constraints?
+// Time Complexity: O(V+E), Space Complexity: O(E)
 
 struct Job
 {
