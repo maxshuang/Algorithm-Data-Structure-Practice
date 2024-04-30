@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <limits>
 #include <cmath>
+#include <queue>
 #include "directed_graph/digraph.hpp"
 
 // Bellman ford is an algorithm for finding the shortest path tree in a digraph without negative cycle.
@@ -16,28 +17,39 @@
 // or it's not the shortest path
 // Time Complexity: O(V*E), Space Complexity: O(V)
 
-class LazyBellmanFordSP
+class BellmanFordSP
 {
 public:
-    LazyBellmanFordSP(const Digraph &g, int s) : src_(s), edge_to_(g.V()), dist_to_(g.V(), std::numeric_limits<double>::infinity())
+    BellmanFordSP(const Digraph &g, int s) : src_(s), edge_to_(g.V()), dist_to_(g.V(), std::numeric_limits<double>::infinity()), on_que_(g.V(), false)
     {
         dist_to_[s] = 0.0;
-        // for any digraph without negative cycles, it will converge to spt after V round
-        for (int r = 0; r < g.V(); ++r)
+        on_que_[s] = true;
+        que_.push(s);
+        int round=0;
+        while (!que_.empty())
         {
-            for (int v = 0; v < g.V(); ++v)
-            {
-                auto pair = g.Adj(v);
-                std::for_each(pair.first, pair.second, [&](const Edge &e)
-                              {
+            int v = que_.front();
+            que_.pop();
+            on_que_[v] = false;
+            auto pair = g.Adj(v);
+            std::for_each(pair.first, pair.second, [&](const Edge &e)
+                          {
                      if(e.Weight()+dist_to_[e.Src()] < dist_to_[e.Dest()]) {
                         edge_to_[e.Dest()]=e;
                         dist_to_[e.Dest()]=e.Weight()+dist_to_[e.Src()];
+                        if(!on_que_[e.Dest()]) {
+                            que_.push(e.Dest());
+                            on_que_[e.Dest()]=true;
+                        }
                      } });
+
+            
+            // a digraph without negative cycles will converge at V round
+            if(++round%g.V()==0) {
+                findNegativeCycle();
+                break;
             }
         }
-
-        findNegativeCycle();
     }
 
     bool HasNegativeCycle() const { return has_negative_cycle_; }
@@ -127,4 +139,7 @@ private:
     std::vector<double> dist_to_;
     bool has_negative_cycle_;
     std::vector<Edge> negative_cycle_;
+    // we only relax the vertice that is relaxed in last round
+    std::queue<int> que_;
+    std::vector<bool> on_que_;
 };
