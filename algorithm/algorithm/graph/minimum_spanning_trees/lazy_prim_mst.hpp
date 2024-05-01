@@ -4,9 +4,9 @@
 #include "undirected_graph/undirected_graph.h"
 #include "edge_comp.hpp"
 
-// Proposition J. ( Cut property) Given any cut in an edge-weighted graph, the crossing edge of minimum weight is in
-// the MST of the graph.
-// Cut edge: vertices are in different cut
+// Proposition J. ( Cut property) Given any cut in an edge-weighted graph, 
+// the crossing edge of minimum weight is in the MST of the graph.
+// Cut edge: vertices are in different disjoint vertice set 
 // Time Complexity: O(E*logE), Space Complexity: O(E)
 
 // Lazy Prim’s algorithm
@@ -23,9 +23,8 @@ public:
         {
             auto e = pq_.top();
             pq_.pop();
-            // There are some edges which are put into the queue before, but not cut edge now.
-            // ignore the non-cut edges here
-            // 之前的一些 edge 会不再是 cut edge
+            // There are some edges which are put into the queue before, but
+            // are not crossing edges anymore, just ignore them.
             if (!marked_[e.Dest()])
             {
                 mst_.push_back(e);
@@ -43,7 +42,8 @@ private:
     {
         marked_[v] = true;
         auto pair = g.Adj(v);
-        // ignore the non-cut edges here if possible
+        // scan all adjective edges of v
+        // ignore the non-crossing edges here if possible
         std::for_each(pair.first, pair.second, [&](const Edge &e)
                       { if(!marked_[e.Dest()])  pq_.push(e); });
     }
@@ -52,7 +52,7 @@ private:
     std::vector<bool> marked_;
     std::vector<Edge> mst_;
     double mst_weight_;
-    // priority_queue is originally a maximum heap with std::less
-    // need change to minimum heap
+    // std::priority_queue is originally a max heap with std::less
+    // need change to min heap
     std::priority_queue<Edge, std::vector<Edge>, EdgeComp> pq_;
 };
