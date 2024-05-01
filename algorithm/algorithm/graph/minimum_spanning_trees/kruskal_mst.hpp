@@ -22,7 +22,7 @@ public:
     double Weight() const { return mst_weight_; }
 private:
     std::priority_queue<Edge, EdgeComp> pq_;
-    // uf_ is for circle detection
+    // uf_ is for circle detection, MST doesn't have cycle
     UnionFind uf_;
     std::vector<Edge> mst_edges_;
     double mst_weight_;

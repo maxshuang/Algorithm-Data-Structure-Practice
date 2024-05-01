@@ -7,9 +7,9 @@
 #include "edge_comp.hpp"
 #include "index_priority_queue.hpp"
 
-// Proposition J. ( Cut property) Given any cut in an edge-weighted graph, the crossing edge of minimum weight is in
-// the MST of the graph.
-// Cut edge: vertices are in different cut
+// Proposition J. ( Cut property) Given any cut in an edge-weighted graph, 
+// the crossing edge of minimum weight is in the MST of the graph.
+// Cut edge: vertices are in different disjoint vertice set
 // Time Complexity: O(E*logV), Space Complexity: O(V)
 
 // The key idea of PrimMST compared to LazyPrimMST is that it only maintains shortest edge of mst's vertices
@@ -30,7 +30,7 @@ public:
         {
             mst_weight_ += pq_.Top();
             auto i = pq_.Pop();
-            // visit the new mst vertices
+            // visit the new mst vertice
             visit(g, i);
         }
 
@@ -48,7 +48,7 @@ private:
                       {
                         // ignore all non-crossing edges
                         if(!marked_[e.Dest()]) {
-                            // update non-tree vertice if the new-added vertice can update some weight_to_ elements
+                            // update non-tree vertice if the new-added vertice has a shorter path to mst
                             if(e.Weight() < weight_to_[e.Dest()]) {
                                 weight_to_[e.Dest()]=e.Weight();
                                 // edge_to_ will converge to the mst
@@ -60,7 +60,8 @@ private:
                         } });
     }
 
-    void make_mst() {
+    void make_mst()
+    {
         // remove [0]
         edge_to_.erase(edge_to_.begin());
     }
@@ -70,12 +71,11 @@ private:
     // [NOTE]: if you need to store the vertice in pq, then you need marked_ array to indicate the mst vertices
     std::vector<Edge> edge_to_;
     std::vector<bool> marked_;
-    // non-tree vertices's smallest weight to mst nodes
+    // non-tree vertices's smallest weight to mst vertices
     std::vector<double> weight_to_;
     double mst_weight_;
-    // keep the shortest edge from non-mst nodes to mst nodes
     // All are crossing edge
     // non-tree-vertice <=> minimum distance to mst
-    // 其实这里存的也是 crossing edge, Space Complexity: O(V)
+    // Space Complexity: O(V)
     IndexPriorityQueue<double, std::greater<double>> pq_;
 };

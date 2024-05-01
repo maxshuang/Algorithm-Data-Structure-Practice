@@ -13,7 +13,6 @@
 // Core Problem: Why it will converges to the shortest path?
 // Because the weight is non-negative and all subpaths are also the shortest paths,
 // so we can use greedy algorithm to select the vertice with shortest path from source at each round.
-// 这种 greedy algorithm 成立的前提是： 权值非负，所以一个路径上的权值是单调递增的，可以一直选择最小的 dist_to_[v].
 // Time Complexity: O(E*logV), Space Complexity: O(V)
 
 // Variants:
@@ -33,6 +32,7 @@ public:
 
         while (!pq_.IsEmpty())
         {
+            // get next vertice with the shortest path to source vertice
             auto i = pq_.Pop();
             visit(g, i);
         }
