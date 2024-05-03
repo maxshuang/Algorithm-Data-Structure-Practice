@@ -7,7 +7,7 @@ class Topological
 public:
     Topological(const Digraph &g) : marked_(g.V(), false), path_(g.V(), false), has_cycle_(false) { dfs(g); }
     bool IsDAG() const { return !has_cycle_; }
-    std::vector<int> Order() const { return order_; }
+    std::vector<int> Order() const { return post_order_; }
 
 private:
     void dfs(const Digraph &g)
@@ -21,7 +21,7 @@ private:
         if (!has_cycle_)
             reverse_order();
         else
-            order_.clear();
+            post_order_.clear();
     }
 
     void dfs_recur(const Digraph &g, int v)
@@ -44,14 +44,14 @@ private:
         // reverse back
         path_[v] = false;
         // postorder traversal
-        order_.push_back(v);
+        post_order_.push_back(v);
     }
 
     void reverse_order()
     {
-        std::vector<int> tmp(order_.size());
-        std::reverse_copy(order_.begin(), order_.end(), tmp.begin());
-        order_.swap(tmp);
+        std::vector<int> tmp(post_order_.size());
+        std::reverse_copy(post_order_.begin(), post_order_.end(), tmp.begin());
+        post_order_.swap(tmp);
     }
 
 private:
@@ -60,5 +60,5 @@ private:
     std::vector<bool> path_;
     bool has_cycle_;
     // put the reverse postorder
-    std::vector<int> order_;
+    std::vector<int> post_order_;
 };

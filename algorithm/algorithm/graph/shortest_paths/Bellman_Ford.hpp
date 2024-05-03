@@ -24,6 +24,7 @@ public:
     {
         dist_to_[s] = 0.0;
         on_que_[s] = true;
+        // start from the source vertice
         que_.push(s);
         int round=0;
         while (!que_.empty())
@@ -37,6 +38,7 @@ public:
                      if(e.Weight()+dist_to_[e.Src()] < dist_to_[e.Dest()]) {
                         edge_to_[e.Dest()]=e;
                         dist_to_[e.Dest()]=e.Weight()+dist_to_[e.Src()];
+                        // if vertice is not on queue, push it for next round
                         if(!on_que_[e.Dest()]) {
                             que_.push(e.Dest());
                             on_que_[e.Dest()]=true;

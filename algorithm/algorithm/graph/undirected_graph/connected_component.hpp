@@ -25,6 +25,7 @@ private:
 
 void ConnectedComponent::dfs(const UndirectedGraph &G)
 {
+    // run dfs for all vertices, but skip those which have been visited
     for (int i = 0; i < G.V(); ++i)
     {
         if (!marked_[i])

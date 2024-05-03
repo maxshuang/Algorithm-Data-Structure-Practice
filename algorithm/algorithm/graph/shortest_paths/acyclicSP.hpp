@@ -16,6 +16,7 @@ public:
     AcyclicSP(const Digraph &g, int s) : src_(s), edge_to_(g.V()), dist_to_(g.V(), std::numeric_limits<double>::infinity())
     {
         dist_to_[s] = 0.0;
+        // calculate Topological sort
         Topological tp(g);
         if (!tp.IsDAG())
             return;
@@ -39,6 +40,7 @@ private:
     {
         int st = 0;
         // skip precedence vertice to src_
+        // they are all unreachable
         for (; st < (int)vs.size(); ++st)
         {
             if (vs[st] == src_)

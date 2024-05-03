@@ -8,7 +8,6 @@
 // Definition. The transitive closure of a digraph
 // G is another digraph with the same set of vertices, but with an edge from v to w in the transitive closure if and only if w is reachable from
 // v in G.
-// 简单说就是所以可达节点对都会拥有一条直连边的图
 // Time Complexity: O(V*(V+E)), Space Complexity: O(V*V)
 
 class TransitiveClosure

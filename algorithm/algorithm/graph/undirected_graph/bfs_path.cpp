@@ -36,7 +36,7 @@ void BfsPaths::bfs(const UndirectedGraph& G, int v) {
         std::for_each(pair.first, pair.second, [&,x](const Edge& w){
             if (!marked_[w.Dest()]) {
                 edge_to_[w.Dest()] = x;
-                // 放入队列之前就标记一下，避免重复访问
+                // mark the vertice before pushing to the queue
                 marked_[w.Dest()] = true;
                 q.push(w.Dest());
             }

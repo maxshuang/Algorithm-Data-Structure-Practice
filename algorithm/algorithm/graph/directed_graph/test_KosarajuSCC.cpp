@@ -1,4 +1,4 @@
-#include "strongly_connected_components.hpp"
+#include "KosarajuSCC.hpp"
 #include "catch.hpp"
 
 TEST_CASE("Test SCC", "[graph]")
@@ -19,7 +19,7 @@ TEST_CASE("Test SCC", "[graph]")
 
     g.AddEdge(3, 5);
 
-    StronglyComponent scc(g);
+    KosarajuSCC scc(g);
 
     REQUIRE(!scc.StronglyConnected(1, 2));
     REQUIRE(!scc.StronglyConnected(1, 6));

@@ -23,13 +23,13 @@
 #include "digraph.hpp"
 
 
-class StronglyComponent {
+class KosarajuSCC {
 public:
-    StronglyComponent(const Digraph& g): marked_(g.V(), false), id_(g.V(), 0), count_(0){ 
-        // first: get reverse postorder traversal result of reverse graph 
+    KosarajuSCC(const Digraph& g): marked_(g.V(), false), id_(g.V(), 0), count_(0){ 
         std::vector<int> reverse_order(g.V());
+        // 1,2: get reverse postorder traversal result of reverse graph 
         dfs_reverse_graph(g, reverse_order);
-        // second: traverse the origin graph according to the reverse_order
+        // 3: traverse the origin graph according to the reverse_order
         dfs_graph(g, reverse_order);
     }
     bool StronglyConnected(int v, int w) const{ return id_[v]==id_[w]; }
