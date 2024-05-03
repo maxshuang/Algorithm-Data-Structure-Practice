@@ -11,7 +11,7 @@ public:
     virtual ~Iterator() {}
 
     virtual self_type &operator++() = 0;
-    virtual self_type operator++(int) = 0;
+    //virtual self_type operator++(int) = 0;
     virtual bool operator==(const self_type &) const = 0;
     virtual bool operator!=(const self_type &) const = 0;
     virtual Ptr operator->() const = 0;

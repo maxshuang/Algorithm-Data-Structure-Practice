@@ -20,12 +20,14 @@ public:
         return *this;
     }
 
+    /*
     self_type operator++(int) override
     {
         self_type tmp = *this;
         ++(*this);
         return tmp;
     }
+    */
 
     // C++ doesn't support contravariant parameter types for virtual functions directly
     bool operator==(const base_type &other) const override

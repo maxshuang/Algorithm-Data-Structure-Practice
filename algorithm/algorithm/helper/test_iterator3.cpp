@@ -13,12 +13,12 @@ TEST_CASE("Test Iterator interface", "Iterator") {
         REQUIRE(*sli==1);
         ++sli;
         REQUIRE(*sli==2);
-        SListIterator<int> sli2=sli++;
-        REQUIRE(*sli==3);
-        REQUIRE(*sli2==2);
-        REQUIRE(sli!=sli2);
-        ++sli2;
-        REQUIRE(sli==sli2);
+        //SListIterator<int> sli2=sli++;
+        //REQUIRE(*sli==3);
+        //REQUIRE(*sli2==2);
+        //REQUIRE(sli!=sli2);
+        //++sli2;
+        //REQUIRE(sli==sli2);
 
         // modify
         SListIterator<int> sli3(fl.begin());
