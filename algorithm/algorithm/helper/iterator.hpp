@@ -2,21 +2,21 @@
 #include <forward_list>
 #include "iterator_base.hpp"
 
-// SListIterator is the Iterator implementation of std::forward_list
+// ListIterator is the Iterator implementation of std::forward_list
 template <class Tp, class Ptr=Tp*, class Ref=Tp&>
-class SListIterator : public Iterator<Tp, Ptr, Ref>
+class ListIterator : public Iterator<Tp, Ptr, Ref>
 {
 public:
     typedef typename std::remove_const<Tp>::type non_const_type;
-    typedef SListIterator<Tp, Ptr, Ref> self_type;
+    typedef ListIterator<Tp, Ptr, Ref> self_type;
     typedef Iterator<Tp, Ptr, Ref> base_type;
     typedef std::forward_list<non_const_type> list_type;
     typedef typename std::conditional<std::is_const<Tp>::value,
                                        typename list_type::const_iterator,
                                        typename list_type::iterator>::type iterator_base;
 
-    explicit SListIterator(const iterator_base &iter) : fl_iter_(iter) {}
-    virtual ~SListIterator() {}
+    explicit ListIterator(const iterator_base &iter) : fl_iter_(iter) {}
+    virtual ~ListIterator() {}
 
     // ok for the Covariant Return Type
     self_type &operator++() override

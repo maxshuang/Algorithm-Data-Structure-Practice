@@ -11,20 +11,20 @@ TEST_CASE("Test Iterator interface", "Iterator") {
     }
 
     SECTION("test iterator") {
-        SListIterator<int> sli(fl.begin());
+        ListIterator<int> sli(fl.begin());
         REQUIRE(*sli==9);
         ++sli;
         REQUIRE(*sli==8);
 
         // modify
-        SListIterator<int> sli3(fl.begin());
+        ListIterator<int> sli3(fl.begin());
         *sli3=11;
         REQUIRE(*fl.begin()==11);
     }
 
     SECTION("test std::algorithm") {
-        SListIterator<int> sli_s(fl.begin());
-        SListIterator<int> sli_e(fl.end());
+        ListIterator<int> sli_s(fl.begin());
+        ListIterator<int> sli_e(fl.end());
         int i=9;
         std::for_each(sli_s, sli_e, [&i](const int& e){
             REQUIRE(e==i);
@@ -39,8 +39,8 @@ TEST_CASE("Test Iterator interface", "Iterator") {
     }
 
     SECTION("test const_iterator") {
-        SListIterator<const int, const int*, const  int&> sli_s(fl.cbegin());
-        SListIterator<const int, const int*, const  int&> sli_e(fl.cend());
+        ListIterator<const int, const int*, const  int&> sli_s(fl.cbegin());
+        ListIterator<const int, const int*, const  int&> sli_e(fl.cend());
         int i=9;
         std::for_each(sli_s, sli_e, [&i](const int& e){
             REQUIRE(e==i);
@@ -48,7 +48,7 @@ TEST_CASE("Test Iterator interface", "Iterator") {
         });
 
         // modify
-        //SListIterator<const int, const int*, const  int&> sli1(fl.cbegin());
+        //ListIterator<const int, const int*, const  int&> sli1(fl.cbegin());
         //*sli1=11;
         //REQUIRE(*fl.begin()==11);
     }

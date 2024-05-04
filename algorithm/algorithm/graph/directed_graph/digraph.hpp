@@ -32,7 +32,7 @@ private:
 class Digraph
 {
 public:
-    typedef SListIterator<const Edge, const Edge*, const Edge&> const_iterator;
+    typedef ListIterator<const Edge, const Edge*, const Edge&> const_iterator;
 
     Digraph(int V) : edge_lists_(V), v_(V), e_(0) {}
     int V() const { return v_; }

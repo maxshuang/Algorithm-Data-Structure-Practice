@@ -40,7 +40,7 @@ class UndirectedGraph
     // behavior
     //
 public:
-    typedef SListIterator<const Edge, const Edge*, const Edge&> const_iterator;
+    typedef ListIterator<const Edge, const Edge*, const Edge&> const_iterator;
 
     UndirectedGraph(int V);
     ~UndirectedGraph();
