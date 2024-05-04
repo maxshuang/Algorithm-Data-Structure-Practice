@@ -135,7 +135,7 @@ int UndirectedGraph::Degree(int v) const
         return -1;
     }
     int deg = 0;
-    for (const Edge &edge : this->edge_lists_[v])
+    for (const Edge & e: this->edge_lists_[v])
     {
         deg++;
     }

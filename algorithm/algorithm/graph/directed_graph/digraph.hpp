@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <forward_list>
-#include "iterator2.hpp"
+#include "iterator.hpp"
 
 /**
  * @struct Edge
@@ -32,7 +32,7 @@ private:
 class Digraph
 {
 public:
-    typedef ConstIterator2<Edge> const_iterator;
+    typedef SListIterator<const Edge, const Edge*, const Edge&> const_iterator;
 
     Digraph(int V) : edge_lists_(V), v_(V), e_(0) {}
     int V() const { return v_; }

@@ -1,50 +1,60 @@
 #pragma once
 #include <forward_list>
+#include "iterator_base.hpp"
 
-template <class T>
-class Iterator {
+// SListIterator is the Iterator implementation of std::forward_list
+template <class Tp, class Ptr=Tp*, class Ref=Tp&>
+class SListIterator : public Iterator<Tp, Ptr, Ref>
+{
 public:
-    typedef typename std::forward_list<T>::iterator base_type;
-    typedef typename base_type::iterator_category iterator_category;
-    typedef typename base_type::value_type        value_type;
-    typedef typename base_type::difference_type   difference_type;
-    typedef typename base_type::pointer           pointer;
-    typedef typename base_type::reference         reference;
+    typedef typename std::remove_const<Tp>::type non_const_type;
+    typedef SListIterator<Tp, Ptr, Ref> self_type;
+    typedef Iterator<Tp, Ptr, Ref> base_type;
+    typedef std::forward_list<non_const_type> list_type;
+    typedef typename std::conditional<std::is_const<Tp>::value,
+                                       typename list_type::const_iterator,
+                                       typename list_type::iterator>::type iterator_base;
 
-    explicit Iterator(const base_type &iter): iter_(iter) {}
-    ~Iterator() = default;
-    Iterator(const Iterator &) = default;
-    Iterator &operator=(const Iterator &) = default;
+    explicit SListIterator(const iterator_base &iter) : fl_iter_(iter) {}
+    virtual ~SListIterator() {}
 
-    // Pre-increment
-    Iterator &operator++() {
-        ++iter_;
+    // ok for the Covariant Return Type
+    self_type &operator++() override
+    {
+        ++fl_iter_;
         return *this;
     }
 
-    // Post-increment
-    Iterator operator++(int) {
-        Iterator other = *this;
+    /*
+    self_type operator++(int) override
+    {
+        self_type tmp = *this;
         ++(*this);
-        return other;
+        return tmp;
+    }
+    */
+
+    // C++ doesn't support contravariant parameter types for virtual functions directly
+    bool operator==(const base_type &other) const override
+    {
+        return fl_iter_ == static_cast<const self_type&>(other).fl_iter_;
     }
 
-    bool operator==(const Iterator &other) const {
-        return iter_ == other.iter_;
-    }
-
-    bool operator!=(const Iterator &other) const {
+    bool operator!=(const base_type &other) const override
+    {
         return !(*this == other);
     }
 
-    pointer operator->() const {
-        return &(operator*());
+    Ptr operator->() const override
+    {
+        return &*fl_iter_;
     }
 
-    reference operator*() const {
-        return *iter_;
+    Ref operator*() const override
+    {
+        return *fl_iter_;
     }
 
 private:
-    base_type iter_;
+    iterator_base fl_iter_;
 };

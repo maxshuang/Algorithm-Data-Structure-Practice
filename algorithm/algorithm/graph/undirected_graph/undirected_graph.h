@@ -5,7 +5,7 @@
  */
 #include <vector>
 #include <forward_list>
-#include "iterator2.hpp"
+#include "iterator.hpp"
 
 /**
  * @struct Edge
@@ -40,15 +40,14 @@ class UndirectedGraph
     // behavior
     //
 public:
-    typedef ConstIterator2<Edge> const_iterator;
+    typedef SListIterator<const Edge, const Edge*, const Edge&> const_iterator;
+
     UndirectedGraph(int V);
     ~UndirectedGraph();
     void AddEdge(int s, int t, double w = 0);
     int V() const;
     int E() const;
-    // [FIXME]
     std::pair<const_iterator, const_iterator> Adj(int v) const;
-    // [FIXME]
     std::pair<const_iterator, const_iterator> Edges();
     int Degree(int v) const;
     int MaxDegree() const;
@@ -64,7 +63,6 @@ private:
 private:
     const int v_; /**< The number of vertices in the graph. */
     int e_;       /**< The number of edges in the graph. */
-    // 其实对于不关注路径权重的场景下，这里可以用点集即可，不用边集
     std::vector<std::forward_list<Edge>> edge_lists_; /**< Array of linked lists to store the edges for each vertex. */
     std::forward_list<Edge> edges_;
 };

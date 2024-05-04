@@ -1,93 +1,55 @@
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#define CATCH_CONFIG_MAIN
 #include <algorithm>
-#include <iostream>
-#include "catch.hpp"
 #include "iterator.hpp"
-#include "iterator2.hpp"
+#include "catch.hpp"
 
-TEST_CASE("iterator", "[iterator]"){
+TEST_CASE("Test Iterator interface", "Iterator") {
+    const int g_total=10;
     std::forward_list<int> fl;
-    fl.push_front(1);
-    fl.push_front(2);
-    fl.push_front(3);
-    fl.push_front(4);
-
-    SECTION("Test copy and assignment")
-    {
-        Iterator<int> iter(fl.begin());
-        REQUIRE(*iter==4);
-        auto iter2=iter;
-        REQUIRE(*iter2==4);
-        ++iter;
-        REQUIRE(*iter==3);
-        REQUIRE(*iter2==4);
-        ++iter2;
-        REQUIRE(*iter2==3);
-        auto iter3(iter);
-        REQUIRE(*iter3==3);
-        auto iter4(iter2);
-        REQUIRE(*iter4==3);
+    for(int i=0; i<g_total; ++i) {
+        fl.push_front(i);
     }
 
-    SECTION("Test increment")
-    {
-        Iterator<int> iter(fl.begin());
-        Iterator<int> iter_end(fl.end());
-        int i=4;
-        for(; iter!=iter_end; ++iter, --i){
-            REQUIRE(*iter==i);
-        }
-        REQUIRE(i==0);
+    SECTION("test iterator") {
+        SListIterator<int> sli(fl.begin());
+        REQUIRE(*sli==9);
+        ++sli;
+        REQUIRE(*sli==8);
+
+        // modify
+        SListIterator<int> sli3(fl.begin());
+        *sli3=11;
+        REQUIRE(*fl.begin()==11);
     }
 
-    SECTION("Test common algorithm")
-    {
-        Iterator<int> iter(fl.begin());
-        Iterator<int> iter_end(fl.end());
-        std::for_each(iter, iter_end, [](int& a){ std::cout << a << std::endl; });
-    }
- }
+    SECTION("test std::algorithm") {
+        SListIterator<int> sli_s(fl.begin());
+        SListIterator<int> sli_e(fl.end());
+        int i=9;
+        std::for_each(sli_s, sli_e, [&i](const int& e){
+            REQUIRE(e==i);
+            --i;
+        });
 
- TEST_CASE("iterator2", "[iterator]"){
-    std::forward_list<int> fl;
-    fl.push_front(1);
-    fl.push_front(2);
-    fl.push_front(3);
-    fl.push_front(4);
+        std::vector<int> tmp(g_total, -1);
+        std::copy(sli_s, sli_e, tmp.begin());
 
-    SECTION("Test copy and assignment")
-    {
-        ConstIterator2<int> iter(fl.begin());
-        REQUIRE(*iter==4);
-        auto iter2=iter;
-        REQUIRE(*iter2==4);
-        ++iter;
-        REQUIRE(*iter==3);
-        REQUIRE(*iter2==4);
-        ++iter2;
-        REQUIRE(*iter2==3);
-        auto iter3(iter);
-        REQUIRE(*iter3==3);
-        auto iter4(iter2);
-        REQUIRE(*iter4==3);
+        std::vector<int> tmp2;
+        std::copy(sli_s, sli_e, std::back_inserter(tmp2));
     }
 
-    SECTION("Test increment")
-    {
-        ConstIterator2<int> iter(fl.begin());
-        ConstIterator2<int> iter_end(fl.end());
-        int i=4;
-        for(; iter!=iter_end; ++iter, --i){
-            REQUIRE(*iter==i);
-        }
-        REQUIRE(i==0);
-    }
+    SECTION("test const_iterator") {
+        SListIterator<const int, const int*, const  int&> sli_s(fl.cbegin());
+        SListIterator<const int, const int*, const  int&> sli_e(fl.cend());
+        int i=9;
+        std::for_each(sli_s, sli_e, [&i](const int& e){
+            REQUIRE(e==i);
+            --i;
+        });
 
-
-    SECTION("Test common algorithm")
-    {
-        ConstIterator2<int> iter(fl.begin());
-        ConstIterator2<int> iter_end(fl.end());
-        std::for_each(iter, iter_end, [](const int& a){ std::cout << a << std::endl; });
+        // modify
+        //SListIterator<const int, const int*, const  int&> sli1(fl.cbegin());
+        //*sli1=11;
+        //REQUIRE(*fl.begin()==11);
     }
- }
+}
