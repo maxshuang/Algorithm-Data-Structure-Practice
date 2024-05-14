@@ -1,5 +1,6 @@
 /*
- * Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+ * Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]],
+such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
 Notice that the solution set must not contain duplicate triplets.
 
 Constraints:
@@ -7,9 +8,16 @@ Constraints:
 -105 <= nums[i] <= 105
 */
 
+/*
+Solution:
+recurse to solve this problem untill we meet two-sum problem.
+
+*/
+
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
+        // O(NlogN)
         sort(nums.begin(), nums.end());
         vector<vector<int>> res;
         // O(N^2)
@@ -29,7 +37,7 @@ public:
                 continue;
             }
 
-            // change to two-sum problem
+            // change to two-sum problem for a sort array
             // O(N)
             int start=i+1;
             int j=start, k=size-1;

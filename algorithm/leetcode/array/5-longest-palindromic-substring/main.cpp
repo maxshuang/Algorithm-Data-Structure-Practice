@@ -6,6 +6,16 @@ Constraints:
 s consist of only digits and English letters.
 */
 
+/*
+Solution:
+Palindromic string has a special pattern: it's synmetric from the central point.
+So we just need to treat every pos in original string as the central point and check whether it's Palindromic string.
+Tricky things here: aba and abba has different Palindromic pattern.
+
+Time Complexity: O(N^2)
+Space Complexity: O(1)
+*/
+
 class Solution {
 public:
     string longestPalindrome(string s) {
