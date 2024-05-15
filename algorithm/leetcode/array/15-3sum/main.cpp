@@ -10,8 +10,9 @@ Constraints:
 
 /*
 Solution:
-recurse to solve this problem untill we meet two-sum problem.
-
+reduce to solving this problem until we meet two-sum problem.
+Time Complexity: O(NlogN), after sorting, the time complexity of a single two-sum problem can be O(logN).
+Space Complexity: O(1)
 */
 
 class Solution {
@@ -20,7 +21,7 @@ public:
         // O(NlogN)
         sort(nums.begin(), nums.end());
         vector<vector<int>> res;
-        // O(N^2)
+        // O(N^2) => O(NlogN)
         int size=nums.size();
         for(int i=0; i<size-2; ++i) {
             // skip duplicate
@@ -38,7 +39,7 @@ public:
             }
 
             // change to two-sum problem for a sort array
-            // O(N)
+            // O(N), Can optimize to O(logN) for binary search
             int start=i+1;
             int j=start, k=size-1;
             while(j<k) {

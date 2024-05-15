@@ -9,7 +9,14 @@ Constraints:
 1 <= nums.length <= 200
 -109 <= nums[i] <= 109
 -109 <= target <= 109
- */
+*/
+
+/*
+Solution:
+reduce to solving this problem until we meet two-sum problem.
+Time Complexity: O(N*N*logN), after sorting, the time complexity of a single two-sum problem can be O(logN).
+Space Complexity: O(1)
+*/
 
 class Solution {
 public:
@@ -49,7 +56,7 @@ public:
                     continue;
                 }
 
-                // sum2
+                // sum2, Can optimize to binary search O(logN)
                 long target2=(long)target3-nums[j];
                 int start2=j+1;
                 int start=start2, end=nums.size()-1;
