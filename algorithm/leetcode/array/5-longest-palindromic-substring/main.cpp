@@ -15,15 +15,16 @@ Tricky things here: aba and abba has different Palindromic pattern.
 Time Complexity: O(N^2)
 Space Complexity: O(1)
 */
+#include <string>
 
 class Solution {
 public:
-    string longestPalindrome(string s) {
-        string maxRes="";
+    std::string longestPalindrome(std::string s) {
+        std::string maxRes="";
         int size = s.size();
         for(int i=0; i<size; ++i) {
-            string s1 = checkPalindrome(s, i, i);
-            string s2 = checkPalindrome(s, i, i+1);
+            std::string s1 = checkPalindrome(s, i, i);
+            std::string s2 = checkPalindrome(s, i, i+1);
             maxRes = s1.size()>maxRes.size()?s1:maxRes;
             maxRes = s2.size()>maxRes.size()?s2:maxRes;
         }
@@ -31,7 +32,7 @@ public:
         return maxRes;
     }
 
-    string checkPalindrome(string s, int l, int r){
+    std::string checkPalindrome(std::string s, int l, int r){
         while(l>=0 && r<s.size() && s[l]==s[r]) {
             --l;
             ++r;

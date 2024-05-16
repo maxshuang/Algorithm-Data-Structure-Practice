@@ -14,14 +14,17 @@ reduce to solving this problem until we meet two-sum problem.
 Time Complexity: O(NlogN), after sorting, the time complexity of a single two-sum problem can be O(logN).
 Space Complexity: O(1)
 */
+#include <vector>
+#include <algorithm>
 
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
+    std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
         // O(NlogN)
-        sort(nums.begin(), nums.end());
-        vector<vector<int>> res;
+        std::sort(nums.begin(), nums.end());
+        std::vector<std::vector<int>> res;
         // O(N^2) => O(NlogN)
+        // An interesting thing is, a O(NlogN) sorting can reduce a single term of two-sum problem to O(logN)
         int size=nums.size();
         for(int i=0; i<size-2; ++i) {
             // skip duplicate
