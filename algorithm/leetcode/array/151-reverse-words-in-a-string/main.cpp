@@ -1,8 +1,10 @@
 /*
- *Given an input string s, reverse the order of the words.
+ *
+Given an input string s, reverse the order of the words.
 A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
 Return a string of the words in reverse order concatenated by a single space.
-Note that s may contain leading or trailing spaces or multiple spaces between two words. The returned string should only have a single space separating the words. Do not include any extra spaces.
+Note that s may contain leading or trailing spaces or multiple spaces between two words. 
+The returned string should only have a single space separating the words. Do not include any extra spaces.
 
 Constraints:
 1 <= s.length <= 104
@@ -11,12 +13,23 @@ There is at least one word in s.
 Follow-up: If the string data type is mutable in your language, can you solve it in-place with O(1) extra space?
  */
 
+/*
+Solution:
+1. May be we can exchange the words, but since it needs to move all elements after the previous one, it's so complicated
+2. we can first reverse the whole string, then scan from the head from reverse back all words
+the pattern: reverse the whole string => find the word => move the word => reverse the word => find the word => ... 
+*/
+
+#include <string>
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
     // O(1) extra space
-    string reverseWords(string s) {
+    std::string reverseWords(std::string s) {
         // in place reverse
-        reverse(s.begin(), s.end());
+        std::reverse(s.begin(), s.end()); 
 
         int n = s.size();
         int idx = 0;
@@ -44,8 +57,8 @@ public:
     }
 
     // O(m) extra space
-    string reverseWords2(string s) {
-        vector<string> res;
+    std::string reverseWords2(std::string s) {
+        std::vector<std::string> res;
         int left=0, right=0;
         // split
         while(right<s.size()) {
@@ -63,7 +76,7 @@ public:
         }
 
         // reverse append
-        string ns;
+        std::string ns;
         ns.reserve(s.size());
         for(int i=res.size()-1; i>=0; --i){
             ns.append(res[i]);

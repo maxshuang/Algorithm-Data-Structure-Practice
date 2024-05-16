@@ -11,7 +11,7 @@ Constraints:
 /*
 Solution:
 reduce to solving this problem until we meet two-sum problem.
-Time Complexity: O(NlogN), after sorting, the time complexity of a single two-sum problem can be O(logN).
+Time Complexity: O(N^2), after sorting, the time complexity of a single two-sum problem can be O(logN).
 Space Complexity: O(1)
 */
 #include <vector>
@@ -23,8 +23,7 @@ public:
         // O(NlogN)
         std::sort(nums.begin(), nums.end());
         std::vector<std::vector<int>> res;
-        // O(N^2) => O(NlogN)
-        // An interesting thing is, a O(NlogN) sorting can reduce a single term of two-sum problem to O(logN)
+        // O(N^2)
         int size=nums.size();
         for(int i=0; i<size-2; ++i) {
             // skip duplicate
@@ -42,7 +41,7 @@ public:
             }
 
             // change to two-sum problem for a sort array
-            // O(N), Can optimize to O(logN) for binary search
+            // O(N)
             int start=i+1;
             int j=start, k=size-1;
             while(j<k) {

@@ -14,19 +14,22 @@ Constraints:
 /*
 Solution:
 reduce to solving this problem until we meet two-sum problem.
-Time Complexity: O(N*N*logN), after sorting, the time complexity of a single two-sum problem can be O(logN).
+Time Complexity: O(N^3), after sorting
 Space Complexity: O(1)
 */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+    std::vector<std::vector<int>> fourSum(std::vector<int>& nums, int target) {
         if (nums.size() < 4) {
             return {};
         }
-        sort(nums.begin(), nums.end());
+        std::sort(nums.begin(), nums.end());
         int length=nums.size();
-        vector<vector<int>> res;
+        std::vector<std::vector<int>> res;
         // sum4
         for(int i=0; i<nums.size()-3; ++i) {
             if(i>0 && nums[i]==nums[i-1]) {
@@ -56,7 +59,7 @@ public:
                     continue;
                 }
 
-                // sum2, Can optimize to binary search O(logN)
+                // sum2, O(N)
                 long target2=(long)target3-nums[j];
                 int start2=j+1;
                 int start=start2, end=nums.size()-1;

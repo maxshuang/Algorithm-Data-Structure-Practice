@@ -7,9 +7,11 @@ Constraints:
 s[i] is a printable ascii character.
 */
 
+#include <vector>
+
 class Solution {
 public:
-    void reverseString(vector<char>& s) {
+    void reverseString(std::vector<char>& s) {
         int left=0, right=s.size()-1;
         while(left<right){
             char t=s[left];

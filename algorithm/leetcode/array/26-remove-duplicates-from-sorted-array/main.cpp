@@ -31,10 +31,11 @@ A simpler solution:
 Time Complexity: O(N), it ends when first point exceeds the end of the array.
 Space Complexity: O(1)
 */
+#include <vector>
 
 class Solution {
 public:
-    int removeDuplicates(vector<int>& nums) {
+    int removeDuplicates(std::vector<int>& nums) {
         int length=nums.size();
         if(length==0) return 0;
         int slow=0, fast=0;

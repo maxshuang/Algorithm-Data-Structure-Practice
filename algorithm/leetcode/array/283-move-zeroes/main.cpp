@@ -7,9 +7,12 @@ Constraints:
 -231 <= nums[i] <= 231 - 1
 */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    void moveZeroes(vector<int>& nums) {
+    void moveZeroes(std::vector<int>& nums) {
         int slow=0, fast=0;
         int length=nums.size();
         while(fast<length){

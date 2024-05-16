@@ -1,17 +1,26 @@
 /*
- *Given an m x n matrix, return all elements of the matrix in spiral order.
+ *
+Given an m x n matrix, return all elements of the matrix in spiral order.
  
 Constraints:
 m == matrix.length
 n == matrix[i].length
 1 <= m, n <= 10
 -100 <= matrix[i][j] <= 100
- */
+*/
+
+/*
+Solution:
+This is the problem of enumeration, you need to carefully maintain the border at the sequence of
+up/right/down/left untill up==down && left==right
+*/
+
+#include <vector>
 
 class Solution {
 public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        vector<int> res;
+    std::vector<int> spiralOrder(std::vector<std::vector<int>>& matrix) {
+        std::vector<int> res;
         int m=matrix.size();
         int n=matrix[0].size();
         int left=0, right=n-1;

@@ -1,14 +1,19 @@
 /*
- * Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
-
- Constraints:
-1 <= n <= 20
+ * 
+Given a positive integer n, generate an n x n matrix filled with elements from 1 to n^2 in spiral order.
+Constraints: 1 <= n <= 20
  */
+
+/*
+Same solution as 54-spiral-matrix
+*/
+
+#include <vector>
 
 class Solution {
 public:
-    vector<vector<int>> generateMatrix(int n) {
-        vector<vector<int>> res(n, vector<int>(n, 0));
+    std::vector<std::vector<int>> generateMatrix(int n) {
+        std::vector<std::vector<int>> res(n, std::vector<int>(n, 0));
         int left=0, right=n-1;
         int upper=0, lower=n-1;
         int idx=1;

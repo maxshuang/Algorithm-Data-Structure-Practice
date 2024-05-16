@@ -35,7 +35,7 @@ original column index becomes new row index, original (N-1-row) index becomes ne
 4 5   =>  2 1
 <i, j> => <j, i>
 
-in-place rotate can be quite tricky:
+in-place rotate can be quite tricky, need change to easier operations:
 <i, j> => <j, N-1-i>  
 ==
 (flip around the diagonal)
