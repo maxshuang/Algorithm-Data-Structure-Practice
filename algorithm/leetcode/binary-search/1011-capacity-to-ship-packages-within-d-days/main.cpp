@@ -1,21 +1,34 @@
 /*
  * A conveyor belt has packages that must be shipped from one port to another within days days.
-The ith package on the conveyor belt has a weight of weights[i]. Each day, we load the ship with packages on the conveyor belt (in the order given by weights). We may not load more weight than the maximum weight capacity of the ship.
-Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within days days.
+The i_th package on the conveyor belt has a weight of weights[i]. 
+Each day, we load the ship with packages on the conveyor belt (in the order given by weights). 
+We may not load more weight than the maximum weight capacity of the ship.
+Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within days $days.
 
 Constraints:
 1 <= days <= weights.length <= 5 * 104
 1 <= weights[i] <= 500
  */
 
+/*
+Solution: M is the range of weight, N is the count of package
+The relationship of weight capacity and the cost of days is monotonical. [sum(weight), min(weight)]
+so we can use binary search to narrow down the scope.
+
+Time Complexity: O(NlogM)
+*/
+
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    int shipWithinDays(vector<int>& weights, int days) {
+    int shipWithinDays(std::vector<int>& weights, int days) {
         // the result is between [max(w[i]), sum(w[i)], and non-decreasing, using binary search
         int maxi=0;
         int sum=0;
         for(int w: weights){
-            maxi=max(w, maxi);
+            maxi=std::max(w, maxi);
             sum+=w;
         }
 

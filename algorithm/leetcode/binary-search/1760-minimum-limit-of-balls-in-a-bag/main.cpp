@@ -1,5 +1,6 @@
 /*
- * You are given an integer array nums where the ith bag contains nums[i] balls. You are also given an integer maxOperations.
+ * You are given an integer array nums where the i_th bag contains nums[i] balls. 
+You are also given an integer maxOperations.
 You can perform the following operation at most maxOperations times:
 Take any bag of balls and divide it into two new bags with a positive number of balls.
 For example, a bag of 5 balls can become two new bags of 1 and 4 balls, or two new bags of 2 and 3 balls.
@@ -11,15 +12,29 @@ Constraints:
 1 <= maxOperations, nums[i] <= 10^9
  */
 
+/*
+Solution: M is the max(nums[i]), N is the count of bag, P is the count of operations 
+1. greedy algorithm. For every operation, spliting the bag with maximum balls evenly is the best choice.
+Time Complexity: O(NlogN+PlogN)
+Space Complexity: O(N)
+
+2. the relationship of penalty and operation times is monotonic, non-increase, so we can use binary search to find the 
+minimum penalty that match the limitation of operation times.
+Time Complexity: O(NlogM)
+*/
+
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    int minimumSize(vector<int>& nums, int maxOperations) {
+    int minimumSize(std::vector<int>& nums, int maxOperations) {
         // give a specified minMax, we can split the nums and get a corresponding operation.
         // the operation is a non-increasing sequence
         // using binary research
         int maxi=0;
         for(int num: nums){
-            maxi=max(maxi, num);
+            maxi=std::max(maxi, num);
         }
 
         int n=nums.size();
