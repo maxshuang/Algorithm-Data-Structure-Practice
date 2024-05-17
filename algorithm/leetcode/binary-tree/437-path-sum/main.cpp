@@ -26,6 +26,29 @@ root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
 3. -3 -> 11
 */
 
+/*
+Good Problem with some tricks and corner case.
+Solution: 
+1. DFS, Time Complexity: O(N^2), Space Complexity: O(1)
+
+2. This is another range sum in tree, but it's the range sum problem essentially, we can use PrefixSum solution to solve it.
+a single round of DFS can get the prefix-sum for all nodes. then for each node, to check whether there exists any path meets the target sum
+it can transform this problem into a search problem because we only want to know whether it's existed.
+Time Complexity: O(N)
+Space Complexity: O(N)
+*/
+
+#include <unordered_map>
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
 struct TreeNode
 {
     int val;
@@ -34,18 +57,51 @@ struct TreeNode
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-int path_sum(struct TreeNode *root, int sum)
-{
-    if (root == nullptr)
-    {
-        return 0;
+class Solution {
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) return 0;
+        return count(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
     }
 
-    return count(root, sum) + path_sum(root->left, sum) + path_sum(root->right, sum);
-}
+    int count(struct TreeNode *root, long sum) {
+        if(root==nullptr) return 0;
+        return (root->val==sum) + count(root->left, sum-root->val) + count(root->right, sum-root->val);
+    }
+};
 
-int count(struct TreeNode *root, int sum) {
-    if(root==nullptr) return 0;
+class Solution2 {
+    // may exists same prefix-sum, only for the current path
+    std::unordered_map<long long, int> preSum;
+    long long pSum;
+    int res;
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        pSum=0;
+        dfs(root, targetSum);
+        return res;
+    }
 
-    return root->val==sum + count(root->left, sum) + count(root->right, sum);
-}
+    // prefix-sum solution
+    void dfs(TreeNode* root, int targetSum) {
+        if(root==nullptr) return;
+
+        pSum+=root->val;
+        // check for the history path
+        if(preSum.count(pSum-targetSum)) {
+            res+=preSum[pSum-targetSum];
+        }
+
+        // we should check current path after checking the history path to avoid corner case: targetSum==0
+        if(pSum==targetSum) ++res;
+        // add to the path
+        preSum[pSum]+=1;
+
+        dfs(root->left, targetSum);
+        dfs(root->right, targetSum);
+
+        // backtrace the path
+        preSum[pSum]-=1;
+        pSum-=root->val;
+    }
+};

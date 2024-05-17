@@ -7,17 +7,18 @@ The number of nodes in the tree is in the range [0, 104].
 -100 <= Node.val <= 100
  */
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+#include <algorithm>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
 class Solution {
 public:
     int maxDepth(TreeNode* root) {
@@ -25,8 +26,9 @@ public:
             return 0;
         }
 
+        // post-order DFS
         int maxLeft=maxDepth(root->left);
         int maxRight=maxDepth(root->right);
-        return 1+max(maxLeft, maxRight);
+        return 1+std::max(maxLeft, maxRight);
     }
 };
