@@ -1,5 +1,6 @@
 /*
- * Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+ * Given an array nums of distinct integers, return all the possible permutations. 
+ You can return the answer in any order.
 
 Constraints:
 1 <= nums.length <= 6
@@ -7,17 +8,19 @@ Constraints:
 All the integers of nums are unique.
  */
 
+#include <vector>
+
 class Solution {
-    vector<int> path;
-    vector<vector<int>> res;
+    std::vector<int> path;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<bool> visited(nums.size(), false);
+    std::vector<std::vector<int>> permute(std::vector<int>& nums) {
+        std::vector<bool> visited(nums.size(), false);
         backtrace(nums, visited);
         return res;
     }
 
-    void backtrace(vector<int>& nums, vector<bool>& visited) {
+    void backtrace(std::vector<int>& nums, std::vector<bool>& visited) {
         int size=nums.size();
         // base case
         if(path.size()==size) {
@@ -32,7 +35,9 @@ public:
             // add to path
             visited[i]=true;
             path.emplace_back(nums[i]);
+
             backtrace(nums, visited);
+            
             // revert the node
             visited[i]=false;
             path.pop_back();

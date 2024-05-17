@@ -7,17 +7,20 @@ Constraints:
 -10 <= nums[i] <= 10
  */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
-    vector<int> combination;
-    vector<vector<int>> res;
+    std::vector<int> combination;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
+    std::vector<std::vector<int>> subsetsWithDup(std::vector<int>& nums) {
+        std::sort(nums.begin(), nums.end());
         backtrace(nums, 0);
         return res;
     }
 
-    void backtrace(vector<int>& nums, int start) {
+    void backtrace(std::vector<int>& nums, int start) {
         res.push_back(combination);
         for(int i=start; i<nums.size(); ++i) {
             if(i>start&&nums[i]==nums[i-1]){

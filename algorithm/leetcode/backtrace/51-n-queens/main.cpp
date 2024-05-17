@@ -7,16 +7,19 @@ Constraints:
 1 <= n <= 9
  */
 
+#include <vector>
+#include <string>
+
 class Solution {
-    vector<vector<string>> res;
+    std::vector<std::vector<std::string>> res;
 public:
-    vector<vector<string>> solveNQueens(int n) {
-        vector<string> chessboard(n, std::string(n, '.'));
+    std::vector<std::vector<std::string>> solveNQueens(int n) {
+        std::vector<std::string> chessboard(n, std::string(n, '.'));
         backtrace(n, 0, chessboard);
         return res;
     }
 
-    void backtrace(int n, int row, vector<string>& chessboard) {
+    void backtrace(int n, int row, std::vector<std::string>& chessboard) {
         // end condition
         if(row==n) {
             res.push_back(chessboard);
@@ -36,7 +39,8 @@ public:
         }
     }
 
-    bool isValid(int n, vector<string>& chessboard, int row, int col) {
+    // check if the current selection conflicts with previous selection
+    bool isValid(int n, std::vector<std::string>& chessboard, int row, int col) {
         // check whether columns conflict with pre-selection
         for(int i=0; i<row;++i) {
             if(chessboard[i][col]=='Q') {

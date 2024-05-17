@@ -1,23 +1,33 @@
 /*
- * Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order.
+ * Given a collection of numbers, nums, that might contain duplicates, 
+ return all possible unique permutations in any order.
 
  Constraints:
 1 <= nums.length <= 8
 -10 <= nums[i] <= 10
  */
 
+/*
+Solution:
+1. using counting-tag
+2. sort the original array to remove the duplicated elements in the same layer
+*/
+
+#include <vector>
+#include <algorithm>
+
 class Solution {
-    vector<int> combination;
-    vector<vector<int>> res;
+    std::vector<int> combination;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        vector<bool> used(nums.size(), false);
+    std::vector<std::vector<int>> permuteUnique(std::vector<int>& nums) {
+        std::sort(nums.begin(), nums.end());
+        std::vector<bool> used(nums.size(), false);
         backtrace(nums, used);
         return res;
     }
 
-    void backtrace(vector<int>& nums, vector<bool>& used){
+    void backtrace(std::vector<int>& nums, std::vector<bool>& used){
         // end condition
         if(combination.size()==nums.size()) {
             res.push_back(combination);

@@ -8,16 +8,25 @@ Constraints:
 All the numbers of nums are unique.
  */
 
+/*
+Solution:
+backtrace in multi-way tree, maintain the path when traverse in DFS
+Time Complexity: O(N!), N fac'torial
+Space Complexity: O(N), for stack
+*/
+
+#include <vector>
+
 class Solution {
-    vector<int> combination;
-    vector<vector<int>> res;
+    std::vector<int> combination;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> subsets(vector<int>& nums) {
+    std::vector<std::vector<int>> subsets(std::vector<int>& nums) {
         backtrace(nums, 0);
         return res;
     }
 
-    void backtrace(vector<int>& nums, int start) {
+    void backtrace(std::vector<int>& nums, int start) {
         res.push_back(combination);
         for(int i=start; i<nums.size(); ++i) {
             // make selection

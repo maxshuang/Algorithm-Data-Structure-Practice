@@ -3,19 +3,22 @@
 
 Only numbers 1 through 9 are used.
 Each number is used at most once.
-Return a list of all possible valid combinations. The list must not contain the same combination twice, and the combinations may be returned in any order.
+Return a list of all possible valid combinations. The list must not contain the same combination twice, 
+and the combinations may be returned in any order.
 
 Constraints:
 2 <= k <= 9
 1 <= n <= 60
  */
 
+#include <vector>
+
 class Solution {
-    vector<int> combination;
+    std::vector<int> combination;
     int preSum;
-    vector<vector<int>> res;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> combinationSum3(int k, int n) {
+    std::vector<std::vector<int>> combinationSum3(int k, int n) {
         res.clear();
         backtrace(k, n, 0, 1);
         return res;

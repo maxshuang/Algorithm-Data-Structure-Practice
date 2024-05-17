@@ -7,11 +7,13 @@ Constraints:
 1 <= k <= n
  */
 
+#include <vector>
+
 class Solution {
-    vector<int> combination;
-    vector<vector<int>> res;
+    std::vector<int> combination;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> combine(int n, int k) {
+    std::vector<std::vector<int>> combine(int n, int k) {
         backtrace(n, k, 1);
         return res;
     }

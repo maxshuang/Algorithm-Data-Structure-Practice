@@ -1,5 +1,6 @@
 /*
- * Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+ * Given a collection of candidate numbers (candidates) and a target number (target), 
+find all unique combinations in candidates where the candidate numbers sum to target.
 Each number in candidates may only be used once in the combination.
 Note: The solution set must not contain duplicate combinations.
 
@@ -9,18 +10,21 @@ Constraints:
 1 <= target <= 30
  */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
-    vector<int> combination;
+    std::vector<int> combination;
     int preSum;
-    vector<vector<int>> res;
+    std::vector<std::vector<int>> res;
 public:
-    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+    std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target) {
         res.clear();
-        sort(candidates.begin(), candidates.end());
+        std::sort(candidates.begin(), candidates.end());
         backtrace(candidates, target, 0);
         return res;
     }
-    void backtrace(vector<int>& candidates, int target, int start) {
+    void backtrace(std::vector<int>& candidates, int target, int start) {
         // end condition
         if(preSum==target){
             res.push_back(combination);
@@ -38,7 +42,16 @@ public:
             // make selection
             preSum+=candidates[i];
             combination.push_back(candidates[i]);
+
+            // truncating branches here is more efficient
+            if(preSum>target){
+                preSum-=candidates[i];
+                combination.pop_back();
+                return;
+            }
+
             backtrace(candidates, target, i+1);
+            
             // revert seletion
             preSum-=candidates[i];
             combination.pop_back();
