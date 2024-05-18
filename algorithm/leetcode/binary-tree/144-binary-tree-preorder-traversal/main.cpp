@@ -7,17 +7,7 @@ The number of nodes in the tree is in the range [0, 100].
  */
 
 #include <vector>
-
-// Definition for a binary tree node.
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
+#include "../tree.hpp"
 class Solution {
 public:
     std::vector<int> preorderTraversal(TreeNode* root) {

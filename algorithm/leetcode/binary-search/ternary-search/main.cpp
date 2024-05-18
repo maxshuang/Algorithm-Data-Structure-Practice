@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include "catch.hpp"
 
 double coeffic[14];
 int N;
@@ -14,7 +15,8 @@ double ff(double x) {
     return res;
 }
 
-int main() {
+#if 0
+TEST_CASE("test ternary search", "") {
     std::cin >> N >> l >> r;
     for(int i=0; i<N+1; ++i) {
         std::cin >> coeffic[i];
@@ -30,3 +32,4 @@ int main() {
     
     return 0;
 }
+#endif

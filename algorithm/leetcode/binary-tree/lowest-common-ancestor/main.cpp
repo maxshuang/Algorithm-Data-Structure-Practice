@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include "../tree.hpp"
 
 /**
  * Single LCA Time Complexity is O(N), Space Complexity is O(N).
@@ -6,13 +7,6 @@
  * shortest_path(a, b)=h(a)+h(b)-2*h(lca)
  * For frequent LCA, we can use binary lifting to achieve O(logN) for each LCA operation.
  */
-
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-};  
 
 class Solution {
 public:

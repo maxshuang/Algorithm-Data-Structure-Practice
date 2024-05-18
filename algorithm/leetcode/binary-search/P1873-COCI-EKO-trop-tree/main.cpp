@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "catch.hpp"
 
 int tree[1000001];
 
@@ -11,7 +12,8 @@ long long getTimber(int n, int cut) {
     return total;
 }
 
-int main(){
+#if 0
+TEST_CASE("Test trop tree", ""){
     int N, M;
     std::cin >> N >> M;
     std::cout << N << " " << M << std::endl;
@@ -33,3 +35,5 @@ int main(){
     std::cout << lf;
     return 0;
 }
+
+#endif

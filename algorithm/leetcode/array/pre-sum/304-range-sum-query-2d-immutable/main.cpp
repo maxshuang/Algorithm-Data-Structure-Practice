@@ -16,15 +16,17 @@ n == matrix[i].length
 At most 104 calls will be made to sumRegion.
  */
 
+#include <vector>
+
 class NumMatrix {
 public:
-    vector<vector<int>> sums;
+    std::vector<std::vector<int>> sums;
 
-    NumMatrix(vector<vector<int>>& matrix) {
+    NumMatrix(std::vector<std::vector<int>>& matrix) {
         int m = matrix.size();
         if (m > 0) {
             int n = matrix[0].size();
-            sums.resize(m + 1, vector<int>(n + 1));
+            sums.resize(m + 1, std::vector<int>(n + 1));
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < n; j++) {
                     sums[i + 1][j + 1] = sums[i][j + 1] + sums[i + 1][j] - sums[i][j] + matrix[i][j];

@@ -11,12 +11,13 @@ Constraints:
 0 <= left <= right < nums.length
 At most 104 calls will be made to sumRange.
  */
+#include <vector>
 
 class NumArray {
     // sum before i
-    vector<int> preSum;
+    std::vector<int> preSum;
 public:
-    NumArray(vector<int>& nums) {
+    NumArray(std::vector<int>& nums) {
         preSum.push_back(0);
         for(int i=0; i<nums.size(); ++i) {
             preSum.push_back(preSum.back()+nums[i]);
