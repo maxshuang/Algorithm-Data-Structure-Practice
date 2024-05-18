@@ -43,13 +43,13 @@ class Solution {
 public:
     int longestCommonSubsequence(const std::string& A, const std::string& B) {
             dp[0][0]=(A[0]==B[0]);
-            for(int i=1; i<A.size(); ++i)
+            for(size_t i=1; i<A.size(); ++i)
                 dp[i][0]=std::max(int(B[0]==A[i]), dp[i-1][0]);
-            for(int j=1; j<B.size(); ++j)
+            for(size_t j=1; j<B.size(); ++j)
                 dp[0][j]=std::max(int(A[0]==B[j]), dp[0][j-1]);
 
-            for(int i=1; i<A.size(); ++i) {
-                for(int j=1; j<B.size(); ++j) {
+            for(size_t i=1; i<A.size(); ++i) {
+                for(size_t j=1; j<B.size(); ++j) {
                     if(A[i]==B[j]) dp[i][j]=dp[i-1][j-1]+1;
                     else dp[i][j]=std::max(dp[i-1][j], dp[i][j-1]);
                 }
@@ -66,8 +66,8 @@ class Solution2 {
     int dp[Max][Max];
 public:
     int longestCommonSubsequence(const std::string& A, const std::string& B) {
-            for(int i=1; i<=A.size(); ++i) {
-                for(int j=1; j<=B.size(); ++j) {
+            for(size_t i=1; i<=A.size(); ++i) {
+                for(size_t j=1; j<=B.size(); ++j) {
                     if(A[i]==B[j]) dp[i][j]=dp[i-1][j-1]+1;
                     else dp[i][j]=std::max(dp[i-1][j], dp[i][j-1]);
                 }
@@ -77,8 +77,8 @@ public:
     }
 
     std::string longestCommonSubsequence2(const std::string& A, const std::string& B) {
-            for(int i=1; i<=A.size(); ++i) {
-                for(int j=1; j<=B.size(); ++j) {
+            for(size_t i=1; i<=A.size(); ++i) {
+                for(size_t j=1; j<=B.size(); ++j) {
                     if(A[i]==B[j]) dp[i][j]=dp[i-1][j-1]+1;
                     else dp[i][j]=std::max(dp[i-1][j], dp[i][j-1]);
                 }
@@ -86,7 +86,7 @@ public:
 
             std::string res;
             // backtracking the dp to find every A[i]==B[j] where the lcs increase
-            int i=A.size(), j=B.size();
+            size_t i=A.size(), j=B.size();
             while(i>=1 && j>=1) {
                 if(A[i-1]==B[j-1]) {
                     res.push_back(A[i-1]);
@@ -108,4 +108,5 @@ TEST_CASE("Test longestCommonSubsequence", "[]")
 {
     Solution2 sl2;
     REQUIRE(sl2.longestCommonSubsequence("abcde", "acde")==4);
+    REQUIRE(sl2.longestCommonSubsequence2("abcde", "acde")=="acde");
 }
