@@ -7,16 +7,19 @@ Constraints:
 0 <= nums[i] <= 400
  */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    int rob(vector<int>& nums) {
+    int rob(std::vector<int>& nums) {
         if(nums.size()==1) return nums[0];
 
         // dp[i]=max(dp[i-1], dp[i-2]+nums[i])
-        int dp_i1=max(nums[0], nums[1]);
+        int dp_i1=std::max(nums[0], nums[1]);
         int dp_i2=nums[0];
         for(int i=2; i<nums.size(); ++i) {
-            int tmp=max(dp_i1, dp_i2+nums[i]);
+            int tmp=std::max(dp_i1, dp_i2+nums[i]);
             dp_i2=dp_i1;
             dp_i1=tmp;
         }

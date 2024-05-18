@@ -7,11 +7,13 @@ Constraints:
 1 <= prices.length <= 3 * 104
 0 <= prices[i] <= 104
  */
+#include <vector>
+#include <algorithm>
 
 class Solution {
 public:
     // greedy algorithm: make sure we has every positive difference
-    int maxProfit(vector<int>& prices) {
+    int maxProfit(std::vector<int>& prices) {
         int maxProfit=0;
         for(int i=1; i<prices.size(); ++i){
             if(prices[i]>prices[i-1]) {
@@ -23,7 +25,7 @@ public:
     }
 
     // dynamic programming
-    int maxProfit2(vector<int>& prices) {
+    int maxProfit2(std::vector<int>& prices) {
         // state: day, hold or not
         // selection: buy/sell/do nothing
         // state transfer function:
@@ -34,8 +36,8 @@ public:
         int dp_i1_0=0, dp_i1_1=-prices[0];
 
         for(int i=1; i<prices.size(); ++i) {
-            int dp_i_0=max(dp_i1_1+prices[i], dp_i1_0);
-            int dp_i_1=max(dp_i1_1, dp_i1_0-prices[i]);
+            int dp_i_0=std::max(dp_i1_1+prices[i], dp_i1_0);
+            int dp_i_1=std::max(dp_i1_1, dp_i1_0-prices[i]);
             dp_i1_0 = dp_i_0;
             dp_i1_1 = dp_i_1;
         }

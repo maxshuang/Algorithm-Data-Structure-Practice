@@ -92,6 +92,20 @@
         "xmemory": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "barrier": "cpp",
+        "latch": "cpp",
+        "valarray": "cpp",
+        "any": "cpp",
+        "cfenv": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "csetjmp": "cpp",
+        "csignal": "cpp",
+        "cuchar": "cpp",
+        "source_location": "cpp",
+        "scoped_allocator": "cpp",
+        "syncstream": "cpp",
+        "typeindex": "cpp"
     }
 }

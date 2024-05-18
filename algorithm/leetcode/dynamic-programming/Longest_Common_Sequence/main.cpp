@@ -33,10 +33,9 @@ Explanation: The longest common subsequence is "ace" and its length is 3.
 *  initial state: dp[0][0]=(A[0]==B[0])
 */
 
-#define CATCH_CONFIG_MAIN
 #include <string>
 #include <algorithm>
-#include "Catch2/catch.hpp"
+#include "catch.hpp"
 
 class Solution {
     static const int Max=1001;
@@ -90,7 +89,7 @@ public:
             int i=A.size(), j=B.size();
             while(i>=1 && j>=1) {
                 if(A[i-1]==B[j-1]) {
-                    res.append(A[i-1]);
+                    res.push_back(A[i-1]);
                     --i;
                     --j;
                 }else if(dp[i-1][j]>dp[i][j-1]) {
@@ -107,7 +106,6 @@ public:
 
 TEST_CASE("Test longestCommonSubsequence", "[]")
 {
-    
-
-
+    Solution2 sl2;
+    REQUIRE(sl2.longestCommonSubsequence("abcde", "acde")==4);
 }

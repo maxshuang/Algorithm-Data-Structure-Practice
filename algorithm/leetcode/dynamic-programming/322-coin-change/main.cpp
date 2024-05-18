@@ -9,9 +9,12 @@ Constraints:
 0 <= amount <= 104
  */
 
+#include <vector>
+#include <algorithm>
+
 class Solution {
 public:
-    int coinChange(vector<int>& coins, int amount) {
+    int coinChange(std::vector<int>& coins, int amount) {
         // base case
         int *dp=new int[amount+1];
         for(int i=0; i<amount+1; ++i){
@@ -27,7 +30,7 @@ public:
                 if(n<coin){
                     continue;
                 }
-                dp[n]=min(dp[n-coin]+1, dp[n]);
+                dp[n]=std::min(dp[n-coin]+1, dp[n]);
             }
         }
 

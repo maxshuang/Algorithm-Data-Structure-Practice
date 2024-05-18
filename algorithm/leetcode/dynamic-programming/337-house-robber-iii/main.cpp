@@ -7,18 +7,19 @@ Constraints:
 The number of nodes in the tree is in the range [1, 104].
 0 <= Node.val <= 104
  */
+#include <algorithm>
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+ // Definition for a binary tree node.
+ struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode() : val(0), left(nullptr), right(nullptr) {}
+      TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+      TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+  };
+
+
 struct SubtreeStatus {
     int selected;
     int notSelected;
@@ -33,12 +34,12 @@ public:
         auto l = dfs(node->left);
         auto r = dfs(node->right);
         int selected = node->val + l.notSelected + r.notSelected;
-        int notSelected = max(l.selected, l.notSelected) + max(r.selected, r.notSelected);
+        int notSelected = std::max(l.selected, l.notSelected) + std::max(r.selected, r.notSelected);
         return {selected, notSelected};
     }
 
     int rob(TreeNode* root) {
         auto rootStatus = dfs(root);
-        return max(rootStatus.selected, rootStatus.notSelected);
+        return std::max(rootStatus.selected, rootStatus.notSelected);
     }
 };

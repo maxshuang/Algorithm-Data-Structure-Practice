@@ -6,23 +6,25 @@ Constraints:
 1 <= nums.length <= 100
 0 <= nums[i] <= 1000
  */
+#include <vector>
+#include <algorithm>
 
 class Solution {
 public:
-    int rob(vector<int>& nums) {
+    int rob(std::vector<int>& nums) {
         if(nums.size()==1) return nums[0];
-        if(nums.size()==2) return max(nums[0], nums[1]);
+        if(nums.size()==2) return std::max(nums[0], nums[1]);
 
         int size=nums.size();
-        return max(robRange(nums, 0, size-2), robRange(nums, 1, size-1));
+        return std::max(robRange(nums, 0, size-2), robRange(nums, 1, size-1));
     }
 
-    int robRange(vector<int>& nums, int i, int j){
+    int robRange(std::vector<int>& nums, int i, int j){
         // dp[i]=max(dp[i-1], dp[i-2]+nums[i])
-        int dp_i1=max(nums[i], nums[i+1]);
+        int dp_i1=std::max(nums[i], nums[i+1]);
         int dp_i2=nums[i];
         for(int k=i+2; k<j+1; ++k) {
-            int tmp=max(dp_i1, dp_i2+nums[k]);
+            int tmp=std::max(dp_i1, dp_i2+nums[k]);
             dp_i2=dp_i1;
             dp_i1=tmp;
         }

@@ -4,6 +4,7 @@
 int vec[101][101];
 int sum[101][101];
 
+#if 0
 int main() {
     int n, m;
     std::cin >> n >> m;
@@ -33,3 +34,5 @@ int main() {
     std::cout << total_max_len;
     return 0;
 }
+
+#endif

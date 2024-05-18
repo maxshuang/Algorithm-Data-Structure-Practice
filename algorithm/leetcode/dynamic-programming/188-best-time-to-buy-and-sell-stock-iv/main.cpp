@@ -8,23 +8,27 @@ Constraints:
 1 <= prices.length <= 1000
 0 <= prices[i] <= 1000
 */
+#include <vector>
+#include <algorithm>
+
+const int INT_MIN=1000000;
 
 class Solution {
 public:
-    int maxProfit(int k, vector<int>& prices) {
-        vector<int> hold(k+1, -prices[0]);
-        vector<int> cash(k+1, 0);
+    int maxProfit(int k, std::vector<int>& prices) {
+        std::vector<int> hold(k+1, -prices[0]);
+        std::vector<int> cash(k+1, 0);
         // hold->sell->hold->sell->...
         for(int i = 1;i < prices.size();i++){
             for(int j = 1;j <= k;j++){
-                hold[j] = max(hold[j], cash[j-1]-prices[i]);
-                cash[j] = max(cash[j], hold[j]+prices[i]);
+                hold[j] = std::max(hold[j], cash[j-1]-prices[i]);
+                cash[j] = std::max(cash[j], hold[j]+prices[i]);
             }
         }
-        return sell[k];
+        return cash[k];  // ???
     }
 
-    int maxProfit2(int k, vector<int>& prices) {
+    int maxProfit2(int k, std::vector<int>& prices) {
         // state: day, hold or not, maximum nums of transation(buy+sell)
         // selection: buy/sell/do nothing
         // state transfer function:
@@ -34,7 +38,7 @@ public:
         // dp[x][0][0]=0;
         // dp[x][0][1]=INT_MIN;
 
-        vector<vector<vector<int>>> dp(prices.size(), vector<vector<int>>(k+1, vector<int>(2, 0)));
+        std::vector<std::vector<std::vector<int>>> dp(prices.size(), std::vector<std::vector<int>>(k+1, std::vector<int>(2, 0)));
         for(int i=0; i<prices.size(); ++i){
             dp[i][0][1]=INT_MIN;
         }
@@ -44,8 +48,8 @@ public:
 
         for(int i=1; i<prices.size(); ++i) {
             for(int j=1; j<k+1; ++j) {
-                dp[i][j][1]=max(dp[i-1][j][1], dp[i-1][j-1][0]-prices[i]);
-                dp[i][j][0]=max(dp[i-1][j][1]+prices[i], dp[i-1][j][0]);
+                dp[i][j][1]=std::max(dp[i-1][j][1], dp[i-1][j-1][0]-prices[i]);
+                dp[i][j][0]=std::max(dp[i-1][j][1]+prices[i], dp[i-1][j][0]);
             }
         }
 
