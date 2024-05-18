@@ -1,6 +1,7 @@
 /*
  * There are n flights that are labeled from 1 to n.
-You are given an array of flight bookings bookings, where bookings[i] = [firsti, lasti, seatsi] represents a booking for flights firsti through lasti (inclusive) with seatsi seats reserved for each flight in the range.
+You are given an array of flight bookings bookings, 
+where bookings[i] = [first_i, last_i, seats_i] represents a booking for flights first_i through last_i (inclusive) with seats_i seats reserved for each flight in the range.
 Return an array answer of length n, where answer[i] is the total number of seats reserved for flight i.
 
 Constraints:
@@ -11,11 +12,13 @@ bookings[i].length == 3
 1 <= seatsi <= 104
  */
 
+#include <vector>
+
 class Solution {
 public:
-    vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
-        vector<int> diff(n, 0);
-        for(vector<int>& book: bookings) {
+    std::vector<int> corpFlightBookings(std::vector<std::vector<int>>& bookings, int n) {
+        std::vector<int> diff(n, 0);
+        for(std::vector<int>& book: bookings) {
             diff[book[0]-1]+=book[2];
             // we can ignore diff[n]
             if(book[1]<n) {
