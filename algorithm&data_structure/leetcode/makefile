@@ -6,7 +6,7 @@ INCLUDE = -I /usr/include/c++/9 -I /usr/include/x86_64-linux-gnu/c++/9 -I ./Catc
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -Wall -std=c++11 $(INCLUDE)
+CXXFLAGS = -g -Wall -std=c++11 $(INCLUDE)
 
 # Linker flags
 LDFLAGS =

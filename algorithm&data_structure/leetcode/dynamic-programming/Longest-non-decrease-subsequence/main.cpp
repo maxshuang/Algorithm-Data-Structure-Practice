@@ -20,8 +20,8 @@ int LongestNondecreaseSubsequence(const std::string& A) {
     std::vector<int> dp(A.size(), 0);
     int ans=0;
     dp[0]=1;
-    for(int i=1; i<A.size(); ++i) {
-        for(int j=1; j<i; ++j) {
+    for(size_t i=1; i<A.size(); ++i) {
+        for(size_t j=1; j<i; ++j) {
             if(A[j]<=A[i]) {
                 dp[i]=std::max(dp[i], dp[j]+1);
                 ans=std::max(ans, dp[i]);

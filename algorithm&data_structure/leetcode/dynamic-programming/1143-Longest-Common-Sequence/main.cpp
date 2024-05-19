@@ -31,10 +31,14 @@ Explanation: The longest common subsequence is "ace" and its length is 3.
 *  2. if A[i]!=B[j], dp[i][j] = max(dp[i-1][j], dp[i][j-1])
 *  
 *  initial state: dp[0][0]=(A[0]==B[0])
+*
+*  Time Complexity: O(M*N), there exists algorithm O(M*N/w) !
+*  Space Complexity: O(M*N)
 */
 
 #include <string>
 #include <algorithm>
+#include <cstring>
 #include "catch.hpp"
 
 class Solution {
@@ -66,9 +70,10 @@ class Solution2 {
     int dp[Max][Max];
 public:
     int longestCommonSubsequence(const std::string& A, const std::string& B) {
+            memset(dp, 0, sizeof(dp));
             for(size_t i=1; i<=A.size(); ++i) {
                 for(size_t j=1; j<=B.size(); ++j) {
-                    if(A[i]==B[j]) dp[i][j]=dp[i-1][j-1]+1;
+                    if(A[i-1]==B[j-1]) dp[i][j]=dp[i-1][j-1]+1;
                     else dp[i][j]=std::max(dp[i-1][j], dp[i][j-1]);
                 }
             }
@@ -77,9 +82,10 @@ public:
     }
 
     std::string longestCommonSubsequence2(const std::string& A, const std::string& B) {
+            memset(dp, 0, sizeof(dp));
             for(size_t i=1; i<=A.size(); ++i) {
                 for(size_t j=1; j<=B.size(); ++j) {
-                    if(A[i]==B[j]) dp[i][j]=dp[i-1][j-1]+1;
+                    if(A[i-1]==B[j-1]) dp[i][j]=dp[i-1][j-1]+1;
                     else dp[i][j]=std::max(dp[i-1][j], dp[i][j-1]);
                 }
             }
@@ -109,4 +115,5 @@ TEST_CASE("Test longestCommonSubsequence", "[]")
     Solution2 sl2;
     REQUIRE(sl2.longestCommonSubsequence("abcde", "acde")==4);
     REQUIRE(sl2.longestCommonSubsequence2("abcde", "acde")=="acde");
+    REQUIRE(sl2.longestCommonSubsequence2("abcdef", "acde")=="acde");
 }
