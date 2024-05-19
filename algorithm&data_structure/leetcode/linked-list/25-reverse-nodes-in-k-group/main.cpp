@@ -14,6 +14,8 @@ The number of nodes in the list is n.
 
 class Solution {
 public:
+
+    // reverse first k, and then call reverseKGroup to reverse the following list
     ListNode* reverseKGroup(ListNode* head, int k) {
         ListNode* p=head;
         int i=0;

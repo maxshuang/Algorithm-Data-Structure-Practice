@@ -14,8 +14,8 @@ The number of nodes in the list is in the range [0, 200].
 class Solution {
 public:
     ListNode* partition(ListNode* head, int x) {
-        ListNode *dummy = new ListNode(-1, head);
-        ListNode *p1 =dummy, *p2=head;
+        ListNode dummy(-1, head);
+        ListNode *p1 =&dummy, *p2=head;
 
         while(p1->next!=nullptr && p2->next!=nullptr) {
             // move p1 to the last node whose val is less than x
@@ -35,13 +35,14 @@ public:
             tmp->next = p1->next;
             p1->next = tmp;
         }
-        return dummy->next; 
+        return dummy.next; 
     }
 
+    // similar to merge two lists, we firstly split the entire list into two lists, then merge them
+    // Link list's node is quite flexible. 
     ListNode* partition2(ListNode* head, int x) {
-      // similar to merge two lists, we firstly split the entire list into two lists, then merge them
-      ListNode *smaller = new ListNode(-1), *p1=smaller;
-      ListNode *larger = new ListNode(-1), *p2=larger;
+      ListNode smaller(-1), *p1=&smaller;
+      ListNode larger(-1), *p2=&larger;
 
       ListNode *p = head;
       while(p!=nullptr) {
@@ -61,7 +62,7 @@ public:
       }
 
       // link smaller's tail to the larger's head
-      p1->next=larger->next;
-      return smaller->next;
+      p1->next=larger.next;
+      return smaller.next;
     }
 };
