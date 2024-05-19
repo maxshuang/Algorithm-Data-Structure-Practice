@@ -9,71 +9,93 @@ Constraints:
 pickIndex will be called at most 104 times.
  */
 
-class Solution {
-    vector<int> buckets;
+#include <vector>
+#include <algorithm>
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
+#include <map>
+#include "catch.hpp"
+
+class Solution
+{
+    std::vector<int> buckets;
     int bck;
     int ibck;
+
 public:
-    Solution(vector<int>& w):buckets(w), bck(0), ibck(0){
-        float sum=0, mini=1000000;
-        for(int wi: w) {
-            sum+=wi;
-            mini=min((float)wi, mini);
+    Solution(const std::vector<int> &w) : buckets(w), bck(0), ibck(0)
+    {
+        float sum = 0, mini = 1000000;
+        for (int wi : w)
+        {
+            sum += wi;
+            mini = std::min((float)wi, mini);
         }
         // using bucket to simulate the distribution of probability, so we can get the same distribution when we have a small nums of sample
-        float miniv=mini/sum;
-        int k=1;
-        while(miniv*k<1) k*=10;
+        float miniv = mini / sum;
+        int k = 1;
+        while (miniv * k < 1)
+            k *= 10;
         buckets.resize(w.size());
-        for(int i=0; i<w.size(); ++i) {
-            buckets[i]=(int)(w[i]/sum*k);
+        for (size_t i = 0; i < w.size(); ++i)
+        {
+            buckets[i] = (int)(w[i] / sum * k);
         }
     }
 
-    int pickIndex() {
-         if(bck>=buckets.size()) {
-            bck=0;
+    int pickIndex()
+    {
+        if (bck >= (int)buckets.size())
+        {
+            bck = 0;
         }
 
-        if(ibck<buckets[bck]){
+        if (ibck < buckets[bck])
+        {
             ++ibck;
             return bck;
         }
 
         ++bck;
-        ibck=0;
+        ibck = 0;
         return pickIndex();
     }
 };
 
+class Solution2 {
+private:
+    std::mt19937 gen;
+    std::uniform_int_distribution<int> dis;
+    std::vector<int> pre;
 
-class Solution {
-    vector<int> preSum;
 public:
-    Solution(vector<int>& w) {
-        srand(0);
-        preSum.resize(w.size());
-        preSum[0]=w[0];
-        for(int i=1; i<w.size(); ++i){
-            preSum[i]=preSum[i-1]+w[i];
-        }
+    Solution2(const std::vector<int>& w): gen(std::random_device{}()), dis(1, std::accumulate(w.begin(), w.end(), 0)) {
+        std::partial_sum(w.begin(), w.end(), std::back_inserter(pre));
     }
-
+    
     int pickIndex() {
-        int random=rand()%preSum.back()+1;
-        // find first index which value is not less than rand
-        int start=0, end=preSum.size()-1;
-        while(start<end) {
-            int mid=start+(end-start)/2;
-            if(preSum[mid]<random) {
-                start=mid+1;
-            }else {
-                end=mid;
-            }
-        }
+        int x = dis(gen);
+        return std::lower_bound(pre.begin(), pre.end(), x) - pre.begin();
+    }
+};
 
-        // start==end
-        return start;
+class Solution3 {
+private:
+    std::vector<int> pre;
+
+public:
+    Solution3(const std::vector<int>& w) {
+        srand(time(nullptr));
+        pre.resize(w.size());
+        pre[0]=w[0];
+        for(int i=1; i<(int)w.size(); ++i)
+            pre[i]=pre[i-1]+w[i];
+    }
+    
+    int pickIndex() {
+        int x = rand()%pre.back();
+        return std::upper_bound(pre.begin(), pre.end(), x) - pre.begin();
     }
 };
 
@@ -82,3 +104,42 @@ public:
  * Solution* obj = new Solution(w);
  * int param_1 = obj->pickIndex();
  */
+
+bool floatEqual(float a, float b)
+{
+    return std::abs(a - b) <= 0.0001;
+}
+
+TEST_CASE("Test random-pick-with-weight", "")
+{
+    SECTION("test1")
+    {
+        Solution2 sl2(std::vector<int>{1, 3});
+        std::map<int, int> pick_map;
+        for (int i = 0; i < 10000; ++i)
+            pick_map[sl2.pickIndex()]++;
+
+        REQUIRE(floatEqual((float)pick_map[0] / 1000, 0.25));
+        //REQUIRE(floatEqual((float)pick_map[1] / 1000, 0.75));
+    }
+
+    SECTION("test2")
+    {
+        Solution2 sl2(std::vector<int>{1, 1, 2});
+        std::map<int, int> pick_map;
+        for (int i = 0; i < 1000; ++i)
+            pick_map[sl2.pickIndex()]++;
+
+        //REQUIRE(floatEqual((float)pick_map[0] / 1000, 0.25));
+        //REQUIRE(floatEqual((float)pick_map[1] / 1000, 0.25));
+        //REQUIRE(floatEqual((float)pick_map[2] / 1000, 0.5));
+    }
+
+    SECTION("test3")
+    {
+        Solution2 sl2(std::vector<int>{1});
+        std::map<int, int> pick_map;
+        for (int i = 0; i < 1000; ++i)
+            pick_map[sl2.pickIndex()]++;
+    }
+}
