@@ -10,41 +10,44 @@ The number of nodes in the list is sz.
 Follow up: Could you do this in one pass?
  * */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+/*
+Solution:
+1. Scan the list and find out the length, the find the reserve-N element
+2. Use double point to move the reverse-N element
+3. Use stack to get the reverse-N element
+*/
+
+#include "../list.hpp"
+
 class Solution {
 public:
+    // Time Complexity: O(N), Space Complexity: O(1)
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        // use a dummy head to alleviate the corner case
-        ListNode *dummy = new ListNode(-1, head);
-        // 1. we use step point to get the (n+1)th node from end
-        ListNode *p=dummy, *step=dummy;
-        for(int i=0; i<n+1; i++) {
-            step=step->next;
+        ListNode dummy(-1, head);
+        ListNode *pre=&dummy, *cur=head;
+        // need move pre to the reverse-n+1 node
+        while(n>0) {
+            cur=cur->next;
+            --n;
         }
-        while(step!=NULL) {
-            p=p->next;
-            step=step->next;
-        }
-        // 2. remove the nth node from end
-        p->next=p->next->next;
 
-        return dummy->next;
+        // move cur to nullptr, so that pre points to the reverse-n+1 node
+        while(cur) {
+            cur=cur->next;
+            pre=pre->next;
+        }
+
+        pre->next=pre->next->next;
+
+        return dummy.next;
     }
 
     // another solution is to use recursive to location the nth node
     // from end
+    // Time Complexity: O(N), Space Complexity: O(N)
     int cur=0;
     ListNode* removeNthFromEnd2(ListNode* head, int n) {
-       if(!head) return NULL;
+       if(!head) return nullptr;
        head->next = removeNthFromEnd(head->next,n);
        // recursive is from the end
        cur++;

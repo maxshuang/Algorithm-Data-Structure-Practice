@@ -10,16 +10,8 @@ The number of nodes in both lists is in the range [0, 50].
 Both list1 and list2 are sorted in non-decreasing order.
 */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
@@ -45,33 +37,33 @@ public:
         }
 
         return head;
-    }}
+    }
 
     // another solution is compare the node in two lists one by one
     ListNode* mergeTwoLists2(ListNode* list1, ListNode* list2) {
-    // When we need a new list, create a dummy head is quiet useful to allivate the corner case
-    // dummy head
-    ListNode *dummy = new ListNode(-1), *p = dummy;
-    ListNode *p1=list1, *p2=list2;
-    while(p1!=nullptr && p2!=nullptr) {
-        if(p1->val > p2->val) {
-            p->next = p2;
-            p2 = p2->next;
-        }else {
-            p->next = p1;
-            p1 = p1->next;
+        // When we need a new list, create a dummy head is quiet useful to allivate the corner case
+        // dummy head
+        ListNode dummy, *p = &dummy;
+        ListNode *p1=list1, *p2=list2;
+        while(p1!=nullptr && p2!=nullptr) {
+            if(p1->val > p2->val) {
+                p->next = p2;
+                p2 = p2->next;
+            }else {
+                p->next = p1;
+                p1 = p1->next;
+            }
+
+            p=p->next;
         }
 
-        p=p->next;
-    }
+        // left
+        if(p1==nullptr) {
+            p->next = p2;
+        }else {
+            p->next = p1;
+        }
 
-    // left
-    if(p1==nullptr) {
-        p->next = p2;
-    }else {
-        p->next = p1;
-    }
-
-   return dummy->next;
+        return dummy.next;
     }
 };

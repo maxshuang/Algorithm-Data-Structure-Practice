@@ -6,16 +6,8 @@ The number of nodes in the list is the range [0, 5000].
 -5000 <= Node.val <= 5000
  */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
@@ -30,5 +22,32 @@ public:
         }
         head->next=nullptr;
         return i;
+    }
+
+    // recursive is the stack
+    ListNode* reverseList2(ListNode* head) {
+        if(!head || !head->next) return head;
+
+        ListNode* new_head=reverseList2(head->next);
+        head->next->next=head;
+        head->next=nullptr;
+        return new_head;
+    }
+
+    ListNode* reverseList3(ListNode* head) {
+        if(head==nullptr) return nullptr;
+
+        ListNode dm(-1, head);
+        ListNode *pre=&dm, *cur=head;
+        ListNode *nxt;
+        while(cur!=nullptr){
+            nxt=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=nxt;
+        }
+        
+        head->next=nullptr;
+        return pre;
     }
 };

@@ -11,20 +11,14 @@ Constraints:
 Follow up: Can you solve it using O(1) (i.e. constant) memor
 */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
         // using slow/fast pointer to detect cycle
         ListNode *slow=head, *fast=head;
-        while(fast!=NULL&&fast->next!=NULL) {
+        while(fast!=nullptr && fast->next!=nullptr) {
             slow=slow->next;
             fast=fast->next->next;
             if(slow==fast){
@@ -40,7 +34,7 @@ public:
     // value, so that we can detect the value to check out if we had visited the node before.
     // Set the node's next to itself has the same idea as this one.
     bool hasCycle2(ListNode *head) {
-        while (head != NULL){
+        while (head != nullptr){
                 if(head->val == 1000000) return true;
                 head->val = 1000000;
                 head = head->next;

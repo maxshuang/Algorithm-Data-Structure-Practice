@@ -15,14 +15,8 @@ intersectVal == listA[skipA] == listB[skipB] if listA and listB intersect.
 Follow up: Could you write a solution that runs in O(m + n) time and use only O(1) memory?
 */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
@@ -32,14 +26,14 @@ public:
         ListNode *p1=headA, *p2=headB;
         while(p1!=p2){
             // reverse list1, if reaches end, then reverse list2
-            if(p1!=NULL){
+            if(p1!=nullptr){
                 p1=p1->next;
             }else {
                 p1=headB;
             }
 
             // reverse list2, if reaches end, then reverse list1
-            if(p2!=NULL){
+            if(p2!=nullptr){
                 p2=p2->next;
             }else {
                 p2=headA;

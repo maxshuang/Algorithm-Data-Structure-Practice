@@ -8,16 +8,8 @@ The number of nodes in the list is in the range [1, 105].
 Follow up: Could you do it in O(n) time and O(1) space?
  */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     bool isPalindrome(ListNode* head) {
@@ -51,7 +43,7 @@ public:
     }
 };
 
-class Solution {
+class Solution2 {
     ListNode* left;
     int maxDepth;
     bool res;

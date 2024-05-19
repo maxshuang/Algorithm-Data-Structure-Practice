@@ -7,16 +7,8 @@ The number of nodes in the list is in the range [1, 100].
 1 <= Node.val <= 100
 */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+#include "../list.hpp"
+
 class Solution {
 public:
     ListNode* middleNode(ListNode* head) {
