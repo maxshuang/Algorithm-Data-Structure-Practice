@@ -60,8 +60,8 @@ int main()
     for(int i=1; i<n; i++) //n-1条边
     {
         scanf("%d%d",&x,&y);//读入边
-        add(x,y);//建立边
-        add(y,x);//建立无向图，为什么这里是双向的？
+        add(x,y); // 建立链状数组的方式
+        add(y,x); 
     }
     for(int i=2; i<=n; i++)
         lg2[i]=lg2[i/2]+1;//处理log数组的关系

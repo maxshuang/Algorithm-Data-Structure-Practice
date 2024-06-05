@@ -3,7 +3,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-// Very interesting algorithm for lca
+// Very interesting algorithm for lca，O(NlogN) for preprocess, O(logN) for each query 
 
 struct TreeNode {
     int val;
