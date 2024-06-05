@@ -1,5 +1,3 @@
-#if 0
-
 #include <bits/stdc++.h>
 using namespace std;
 const int N=500005,M=500005; //N存储节点总数,M存储边的总数
@@ -53,7 +51,8 @@ int LCA(int x,int y)
         }
     return fa[x][0];//必须返回x的父亲节点,也就是Lca(x,y)
 }
- 
+
+#if 0 
 int main()
 {
     int n,m,s,x,y;
@@ -74,5 +73,4 @@ int main()
     }
     return 0;
 }
-
 #endif
