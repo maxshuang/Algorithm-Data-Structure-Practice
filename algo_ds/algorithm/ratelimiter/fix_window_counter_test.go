@@ -9,9 +9,10 @@ import (
 
 func TestFixWindowCounter(t *testing.T) {
 	fwc := &FixWindowCounter{
-		curTs: 0,
-		count: 0,
-		cap:   5,
+		preMs:  0,
+		count:  0,
+		cap:    5,
+		window: 500,
 	}
 
 	require.True(t, fwc.Request())
