@@ -95,6 +95,7 @@ void add(std::vector<int>& array, const Op& op) {
 // 1. cover the whole block, add block sum to total
 // 2. cover a part of block, do the range sum
 int sum(std::vector<int>& array, const Op& op) {
+    // NOTE: can use static table to accelerate the query
     int lb=op.l/blockSize, rb=op.r/blockSize;
     int total=0;
 
