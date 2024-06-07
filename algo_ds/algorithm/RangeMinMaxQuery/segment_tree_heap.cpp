@@ -1,4 +1,5 @@
 #include <vector>
+#include <string.h>
 #include "catch.hpp"
 
 struct SegmentTreeHeap {
@@ -6,14 +7,16 @@ struct SegmentTreeHeap {
         int sum;
         int lazyTag; // for all next level nodes
     };
-    
+
     const static int MAXNODE=100;
-    // complete tree of MAXNODE leaf nodes has 4*MAXNODE-5 nodes
-    TreeNode nodes[4*MAXNODE];
+    // complete tree of MAXNODE leaf nodes has (4*MAXNODE-5) nodes
+    TreeNode nodes[4*MAXNODE];    
+
     int size;
 
     SegmentTreeHeap(const std::vector<int>& arr) {
         size=arr.size();
+        memset(nodes, 0, sizeof(nodes));
         build(arr, 0, arr.size()-1, 1); 
     }
 
@@ -28,12 +31,12 @@ struct SegmentTreeHeap {
         nodes[p].sum = nodes[p * 2].sum + nodes[(p * 2) + 1].sum;
     }
 
-    int querySum(int l, int r) {
-        return querySumRecur(l, r, 0, size-1, 1);
+    int queryRange(int l, int r) {
+        return queryRangeRecur(l, r, 0, size-1, 1);
     }
 
     // [l, r] is the query range, [s, t] is the current range
-    int querySumRecur(int l, int r, int s, int t, int p) {
+    int queryRangeRecur(int l, int r, int s, int t, int p) {
         if(l<=s && t<=r) {
             return nodes[p].sum;
         }
@@ -47,8 +50,8 @@ struct SegmentTreeHeap {
         }
 
         int sum=0;
-        if(l<=m) sum+=querySumRecur(l, r, s, m, 2*p);
-        if(m<r) sum+=querySumRecur(l, r, m+1, t, 2*p+1);
+        if(l<=m) sum+=queryRangeRecur(l, r, s, m, 2*p);
+        if(m<r) sum+=queryRangeRecur(l, r, m+1, t, 2*p+1);
         return sum;
     }
 
@@ -66,7 +69,8 @@ struct SegmentTreeHeap {
         }
 
         // interval range
-        int m=s+(t-s)>>1;
+        // [NOTE]: take care of the priority of >>
+        int m=s+((t-s)>>1);
         // push down lazy tag to its children nodes
         if(nodes[p].lazyTag != 0) {
             nodes[2*p].sum=(m-s+1)*nodes[p].lazyTag, nodes[2*p].lazyTag+=nodes[p].lazyTag;
@@ -78,8 +82,8 @@ struct SegmentTreeHeap {
         // s           t
         //    |____|
         //    l    r
-        if(l<=m) updateRangeRecur(l, r, v, s, m, p);
-        if(m<r) updateRangeRecur(l, r, v, m+1, t, p);
+        if(l<=m) updateRangeRecur(l, r, v, s, m, 2*p);
+        if(m<r) updateRangeRecur(l, r, v, m+1, t, 2*p+1);
         // we need to update current node according to the aboved partial updates 
         nodes[p].sum=nodes[2*p].sum+nodes[2*p+1].sum;
         return;

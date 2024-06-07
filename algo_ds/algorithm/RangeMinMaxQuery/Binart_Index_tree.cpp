@@ -16,7 +16,7 @@ private:
 
     // Time Complexity: O(logN)
     int getSum(int index) {
-        int sum = 0;、、、
+        int sum = 0;
         while (index > 0) {
             sum += tree[index];
             // move to its children node
