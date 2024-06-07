@@ -43,11 +43,7 @@ struct SegmentTreeHeap {
 
         int m = s + ((t - s) >> 1);
          // push down lazy tag to its children nodes
-        if(nodes[p].lazyTag != 0) {
-            nodes[2*p].sum=(m-s+1)*nodes[p].lazyTag, nodes[2*p].lazyTag+=nodes[p].lazyTag;
-            nodes[2*p+1].sum=(t-m)*nodes[p].lazyTag, nodes[2*p+1].lazyTag+=nodes[p].lazyTag;
-            nodes[p].lazyTag=0;
-        }
+        pushDown(s, m, t, p);
 
         int sum=0;
         if(l<=m) sum+=queryRangeRecur(l, r, s, m, 2*p);
@@ -72,11 +68,7 @@ struct SegmentTreeHeap {
         // [NOTE]: take care of the priority of >>
         int m=s+((t-s)>>1);
         // push down lazy tag to its children nodes
-        if(nodes[p].lazyTag != 0) {
-            nodes[2*p].sum=(m-s+1)*nodes[p].lazyTag, nodes[2*p].lazyTag+=nodes[p].lazyTag;
-            nodes[2*p+1].sum=(t-m)*nodes[p].lazyTag, nodes[2*p+1].lazyTag+=nodes[p].lazyTag;
-            nodes[p].lazyTag=0;
-        }
+        pushDown(s, m, t, p);
 
         // |___________|
         // s           t
@@ -87,6 +79,14 @@ struct SegmentTreeHeap {
         // we need to update current node according to the aboved partial updates 
         nodes[p].sum=nodes[2*p].sum+nodes[2*p+1].sum;
         return;
+    }
+
+    void pushDown(int s, int m, int t, int p) {
+        if(nodes[p].lazyTag != 0) {
+            nodes[2*p].sum=(m-s+1)*nodes[p].lazyTag, nodes[2*p].lazyTag+=nodes[p].lazyTag;
+            nodes[2*p+1].sum=(t-m)*nodes[p].lazyTag, nodes[2*p+1].lazyTag+=nodes[p].lazyTag;
+            nodes[p].lazyTag=0;
+        }
     }
 };
 
