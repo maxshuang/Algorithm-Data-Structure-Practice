@@ -15,7 +15,7 @@ type SliceWindowCounter1 struct {
 	cap    int
 }
 
-func (sw *SliceWindowCounter1) Request() bool {
+func (sw *SliceWindowCounter1) Allow() bool {
 	nowTs := getMilliSecond()
 	sw.que.Add(nowTs)
 	for sw.que.Length() > 0 {
@@ -44,7 +44,7 @@ type SliceWindowCounter2 struct {
 	curMs    int64
 }
 
-func (sw *SliceWindowCounter2) Request() bool {
+func (sw *SliceWindowCounter2) Allow() bool {
 	nowMs := getMilliSecond()
 	diff := nowMs - sw.curMs
 
@@ -92,7 +92,7 @@ func New(win int, granu int, cap int) *SliceWindowCounter3 {
 	}
 }
 
-func (sw *SliceWindowCounter3) Request() bool {
+func (sw *SliceWindowCounter3) Allow() bool {
 	nowMs := getMilliSecond()
 	idx := int(nowMs % int64(sw.granu))
 	if nowMs == sw.slots[idx].Ms {

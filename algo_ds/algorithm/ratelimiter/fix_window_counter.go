@@ -11,7 +11,7 @@ type FixWindowCounter struct {
 	window int
 }
 
-func (fw *FixWindowCounter) Request() bool {
+func (fw *FixWindowCounter) Allow() bool {
 	nowMs := getMilliSecond()
 	diff := nowMs - fw.preMs
 	if diff >= 0 && diff < int64(fw.window) {

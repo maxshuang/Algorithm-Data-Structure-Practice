@@ -15,15 +15,15 @@ func TestFixWindowCounter(t *testing.T) {
 		window: 500,
 	}
 
-	require.True(t, fwc.Request())
+	require.True(t, fwc.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, fwc.Request())
+	require.True(t, fwc.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, fwc.Request())
+	require.True(t, fwc.Allow())
 	time.Sleep(2 * time.Second)
 	for i := 1; i < 6; i++ {
-		require.True(t, fwc.Request())
+		require.True(t, fwc.Allow())
 	}
-	require.False(t, fwc.Request())
-	require.False(t, fwc.Request())
+	require.False(t, fwc.Allow())
+	require.False(t, fwc.Allow())
 }
