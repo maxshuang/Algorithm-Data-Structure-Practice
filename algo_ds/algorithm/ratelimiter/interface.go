@@ -3,8 +3,8 @@ package ratelimiter
 import "time"
 
 type RateLimiter interface {
-	// Request asks for a valid token
-	Request() bool
+	// Allow asks for a valid token
+	Allow() bool
 }
 
 func getMilliSecond() int64 {

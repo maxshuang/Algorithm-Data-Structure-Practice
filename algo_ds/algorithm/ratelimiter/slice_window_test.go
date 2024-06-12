@@ -15,17 +15,17 @@ func TestSliceWindowCounter1(t *testing.T) {
 		cap:    5,
 	}
 
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(2 * time.Second)
 	for i := 1; i < 6; i++ {
-		require.True(t, sw.Request())
+		require.True(t, sw.Allow())
 	}
-	require.False(t, sw.Request())
-	require.False(t, sw.Request())
+	require.False(t, sw.Allow())
+	require.False(t, sw.Allow())
 }
 
 func TestSliceWindowCounter2(t *testing.T) {
@@ -39,40 +39,40 @@ func TestSliceWindowCounter2(t *testing.T) {
 		curMs:    getMilliSecond(),
 	}
 
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(2 * time.Second)
 	for i := 1; i < 6; i++ {
-		require.True(t, sw.Request())
+		require.True(t, sw.Allow())
 	}
-	require.False(t, sw.Request())
-	require.False(t, sw.Request())
+	require.False(t, sw.Allow())
+	require.False(t, sw.Allow())
 
 	time.Sleep(1 * time.Second)
 	for i := 1; i < 6; i++ {
-		require.True(t, sw.Request())
+		require.True(t, sw.Allow())
 		time.Sleep(20 * time.Millisecond)
 	}
-	require.False(t, sw.Request())
+	require.False(t, sw.Allow())
 }
 
 func TestSliceWindowCounter3(t *testing.T) {
 	sw := New(1000, 10, 5)
 
-	require.True(t, sw.Request())
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
+	require.True(t, sw.Allow())
 	time.Sleep(1 * time.Second)
-	require.True(t, sw.Request())
+	require.True(t, sw.Allow())
 	time.Sleep(2 * time.Second)
 	for i := 1; i < 6; i++ {
-		require.True(t, sw.Request())
+		require.True(t, sw.Allow())
 		time.Sleep(11 * time.Millisecond)
 	}
-	require.False(t, sw.Request())
+	require.False(t, sw.Allow())
 	time.Sleep(956 * time.Millisecond)
-	require.True(t, sw.Request())
-	require.False(t, sw.Request())
+	require.True(t, sw.Allow())
+	require.False(t, sw.Allow())
 }

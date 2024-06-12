@@ -59,11 +59,11 @@ public:
     }
 
     // for 1 to i
-    int query(int i) {
+    int querySum(int i) {
         return getSum(i);
     }
 
-    int queryRange(int l, int r) {
+    int querySumRange(int l, int r) {
         return getSum(r) - getSum(l - 1);
     }
 };
@@ -77,7 +77,7 @@ TEST_CASE("Test Binary Index Tree", "") {
         bit.update(i, arr[i]);
     }
 
-    REQUIRE(bit.queryRange(0, 2)==5);
+    REQUIRE(bit.querySumRange(0, 2)==5);
     bit.update(2, 3);
-    REQUIRE(bit.queryRange(0, 2)==5);
+    REQUIRE(bit.querySumRange(0, 2)==5);
 }
