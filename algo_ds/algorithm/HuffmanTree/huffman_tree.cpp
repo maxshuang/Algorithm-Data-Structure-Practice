@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <string>
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
 // HuffmanTree is for compression codec.
@@ -16,16 +17,16 @@ private:
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(): weight(0), str(), left(nullptr), right(nullptr){}
+        TreeNode(): weight(0), str(""), left(nullptr), right(nullptr){}
 
-        bool operator()(const TreeNode& lf, const TreeNode& rh) const {
-            return lf.weight < rh.weight;
+        bool operator()(const TreeNode& rh) const {
+            return this->weight < rh.weight;
         }
     };
 
     struct NodeGreater{
         bool operator()(const TreeNode* lf, const TreeNode* rh) const {
-            return std::greater<TreeNode>(*lf, *rh)();
+            return !(lf->operator()(*rh));
         }
     };
 
@@ -68,22 +69,24 @@ private:
         return &nodes[nodeIdx];
     }
 
+    // dfs: O(N)
     void getWPL(const TreeNode* root) {
         if(!root) return;
 
         // dfs
-        minWPL=dfsTree(root, 0);
+        minWPL=dfsWPL(root, 0);
     }
 
-    int dfsTree(const TreeNode* root, int depth) {
+    int dfsWPL(const TreeNode* root, int depth) {
         if(!root) return 0;
         // leave node
         if(!root->left && !root->right) return root->weight*depth;
 
-        return dfsTree(root->left, depth+1)+dfsTree(root->right, depth+1);
+        return dfsWPL(root->left, depth+1)+dfsWPL(root->right, depth+1);
     }
 
-    void getCodecTable(const TreeNode* root) {
+    // dfs: O(N)
+    void genCodecTable(const TreeNode* root) {
         std::string codec;
         dfsCodec(root, codec);
     }
@@ -97,18 +100,21 @@ private:
             return;
         }
 
-        dfsCodec(root->left, codec.push_back('0'));
-        dfsCodec(root->right, codec.push_back('1'));
+        codec.push_back('0');
+        dfsCodec(root->left, codec);
+        codec.push_back('1');
+        dfsCodec(root->right, codec);
 
         // revert back
         codec.pop_back();
     }
 
 public:
+    // O(N)
     HuffmanTree(const std::map<std::string, int>& table) {
         tree=buildTree(table);
         getWPL(tree);
-        getCodecTable(tree);
+        genCodecTable(tree);
     }
 
     int getMinWPL() const {
@@ -140,9 +146,10 @@ int getMinWPL(int arr[], int n) {
 }
 
 TEST_CASE("Test Huffman Tree", "") {
-    std::map<std::string, int> table{{"A", 35}, {"B", 25}, {"C", 15}, {"D", 15}, {"E", 10}};
+    std::map<std::string, int> table={{"A", 35}, {"B", 25}, {"C", 15}, {"D", 13}, {"E", 10}};
     HuffmanTree hfTree(table);
 
-    REQUIRE(hfTree.getMinWPL()==225);
-    REQUIRE(hfTree.getCodecTable()==std::map<std::string, int>{{"A", "11"}, {"B", "00"}, {"C", "01"}, {"D", "101"}, {"E", "100"}});
+    REQUIRE(hfTree.getMinWPL()==219);
+    std::map<std::string, std::string> tmp={{"A", "11"}, {"B", "10"}, {"C", "00"}, {"D", "011"}, {"E", "010"}};
+    REQUIRE(hfTree.getCodecTable()==tmp);
 }
