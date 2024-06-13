@@ -17,7 +17,7 @@ private:
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(): weight(0), str(""), left(nullptr), right(nullptr){}
+        TreeNode(int w=0, const std::string& s="", TreeNode* l=nullptr, TreeNode* r=nullptr): weight(w), str(s), left(l), right(r){}
 
         bool operator()(const TreeNode& rh) const {
             return this->weight < rh.weight;
@@ -34,9 +34,6 @@ private:
 
     typedef std::priority_queue<TreeNode*, std::vector<TreeNode*>, NodeGreater> MINPQ;    
     
-    static const int MAXNODE=100;
-    int nodeIdx=-1;
-    TreeNode nodes[MAXNODE];
     TreeNode* tree=nullptr;
     MINPQ pq;
     int minWPL=0;
@@ -45,9 +42,8 @@ private:
 private:
     TreeNode* buildTree(const std::map<std::string, int>& table) {
         for (const auto& pair : table) {
-            nodes[++nodeIdx].weight=pair.second;
-            nodes[nodeIdx].str=pair.first;
-            pq.push(&nodes[nodeIdx]);
+            TreeNode* node = new TreeNode(pair.second, pair.first);
+            pq.push(node);
         }
 
         int cn=table.size();
@@ -63,10 +59,8 @@ private:
     }
 
     TreeNode* mergeTree(TreeNode* lf, TreeNode* rh) {
-        nodes[++nodeIdx].weight=lf->weight+rh->weight;
-        nodes[nodeIdx].left=lf;
-        nodes[nodeIdx].right=rh;
-        return &nodes[nodeIdx];
+        TreeNode* node = new TreeNode(lf->weight+rh->weight, "", lf, rh);
+        return node;
     }
 
     // dfs: O(N)
@@ -115,6 +109,10 @@ public:
         tree=buildTree(table);
         getWPL(tree);
         genCodecTable(tree);
+    }
+
+    ~HuffmanTree() {
+        // [TODO] delete tree
     }
 
     int getMinWPL() const {
