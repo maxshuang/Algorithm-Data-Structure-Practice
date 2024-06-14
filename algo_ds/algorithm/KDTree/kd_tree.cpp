@@ -67,10 +67,9 @@ private:
 
         // hit
         if(root->p==p) {
-            if(!root->left && !root->right) {
-                delete root;
-                root=nullptr;
-            }else if(!root->left) {
+            #if 0
+            // The following is wrong because it violates the axis rule of the layer in binary search tree
+            else if(!root->left) {
                 KDNode* tmp=root;
                 root=root->right;
                 delete tmp;
@@ -78,12 +77,26 @@ private:
                 KDNode* tmp=root;
                 root=root->left;
                 delete tmp;
-            }else {
+            }
+            #endif
+            if (root->right) {
                 KDNode* successor = findMin(root->right, axis);
                 // copy the data directly
                 root->p=successor->p;
                 // deal the right tree
                 deleteRecur(successor->p, root->right, nextAxis(axis));
+            }else if(root->left) {
+                // we can't use findMax(left subtree) here, because it can violate the binary search rule
+                // so we still find the findMin(left subtree), and then move the whole left subtree to right subtree
+                KDNode* min = findMin(root->left, axis);
+                root->p=min->p;
+                root->right=root->left;
+                root->left=nullptr;
+                deleteRecur(min->p, root->right, nextAxis(axis));
+            }else {
+                // leave node
+                delete root;
+                root=nullptr;
             }
 
             return true;
@@ -102,21 +115,24 @@ private:
         if(!node) return nullptr;
         
         // the smaller one could be at both children subtrees 
+        // min(findMin(left subtree), findMin(right subtree), root)
         if(node->axis != axis) {
             KDNode* lf=findMin(node->left, axis);
             KDNode* rt=findMin(node->right, axis);
-            if(!lf && !rt) return node;
-            else if(!lf) return rt;
-            else if(!rt) return lf;
-            else if(lf->p.coords[axis] < rt->p.coords[axis]) {
-                // the root node may have the smallest value at axis
-                return lf->p.coords[axis] < node->p.coords[axis]? lf: node;
-            }
-            return rt->p.coords[axis] < node->p.coords[axis]?rt:node;
+            
+            KDNode* min=nullptr;
+            if(!lf) min=rt;
+            else if(!rt) min=lf;
+            else if(lf->p.coords[axis] < rt->p.coords[axis]) min=lf;
+            else min=rt;
+
+            if(!min) return node;
+            return min->p.coords[axis] < node->p.coords[axis]?min:node;
         }
 
-        KDNode* min=findMin(node->left, axis);
-        return min? min: node;
+        // root node or in the left subtree
+        if(!node->left) return node;
+        return findMin(node->left, axis);
     }
 
     KDNode* insertRecur(const Point& p, KDNode* root, int axis) {
@@ -127,6 +143,9 @@ private:
             return root;
         }
 
+        // binary tree, maintain the invariant:
+        // 1. coords[axis] in left tree < coords[axis] in root
+        // 2. coords[axis] in right tree >= coords[axis] in root
         if(p.coords[axis]<root->p.coords[axis]) {
             root->left=insertRecur(p, root->left, nextAxis(axis));
         }else {
@@ -380,6 +399,7 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
             {std::vector<int>{8, 1}, 3},
             {std::vector<int>{9, 6}, 2},
         };
+        REQUIRE(kdTree.GetTree()==res);
     }
 
     SECTION("delete node with one child") {
@@ -392,5 +412,45 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
             {std::vector<int>{8, 1}, 3},
             {std::vector<int>{9, 6}, 2},
         };
+        REQUIRE(kdTree.GetTree()==res);
+    }
+
+    /*
+    //        <5, 4>
+    //        /    \   
+    //    <2, 3>   <7, 2>
+    //        \    /     \
+    //    <4, 7>  <8, 1>  <9, 6>
+    */
+    SECTION("delete node without right child, but with left child") {
+        REQUIRE(kdTree.Delete({std::vector<int>{4, 7}, 5})==true);
+        kdTree.Insert({std::vector<int>{4, 1}, 11});
+        kdTree.Insert({std::vector<int>{4, 2}, 12});
+    /*
+    // x:     <5, 4>
+    //        /     \   
+    // y:   <2, 3>  <7, 2>
+    //      /       /     \
+    // x: <4, 1>   <8, 1>  <9, 6>
+    //      \
+    // y:   <4, 2>
+    */
+        REQUIRE(kdTree.Delete({std::vector<int>{2, 3}, 6})==true);
+        /*
+        // x:     <5, 4>
+        //        /    \   
+        // y:   <4, 1>   <7, 2>
+        //          \    /     \
+        // x:    <4, 2> <8, 1>  <9, 6>
+        */
+        std::vector<Point> res = {
+            {std::vector<int>{5, 4}, 4},
+            {std::vector<int>{4, 1}, 11},
+            {std::vector<int>{4, 2}, 12},
+            {std::vector<int>{7, 2}, 1},
+            {std::vector<int>{8, 1}, 3},
+            {std::vector<int>{9, 6}, 2},
+        };
+        REQUIRE(kdTree.GetTree()==res);
     }
 }
