@@ -122,6 +122,11 @@ private:
     KDNode* insertRecur(const Point& p, KDNode* root, int axis) {
         if(!root) return new KDNode(p, axis);
 
+        if(p==root->p) {
+            // do nothing.
+            return root;
+        }
+
         if(p.coords[axis]<root->p.coords[axis]) {
             root->left=insertRecur(p, root->left, nextAxis(axis));
         }else {
@@ -323,6 +328,19 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
         };
         REQUIRE(kdTree.GetTree()==res);
    }
+
+    SECTION("insert the same node") {
+        kdTree.Insert({std::vector<int>{2, 3}, 6});
+        std::vector<Point> res = {
+            {std::vector<int>{5, 4}, 4},
+            {std::vector<int>{2, 3}, 6},
+            {std::vector<int>{4, 7}, 5},
+            {std::vector<int>{7, 2}, 1},
+            {std::vector<int>{8, 1}, 3},
+            {std::vector<int>{9, 6}, 2},       
+        };
+        REQUIRE(kdTree.GetTree()==res);
+    }
 
     SECTION("delete non-existed node") {
         REQUIRE(kdTree.Delete({std::vector<int>{5, 4}, 4})==true);
