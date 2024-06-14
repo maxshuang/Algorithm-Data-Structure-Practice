@@ -49,6 +49,7 @@ public:
     }
 
     // quite similar to binary search tree deletion
+    // more complicated
     bool Delete(const Point& p) {
         return deleteRecur(p, tree, tree->axis);
     }
@@ -78,7 +79,7 @@ private:
                 root=root->left;
                 delete tmp;
             }else {
-                KDNode* successor = findMin(root->right， axis);
+                KDNode* successor = findMin(root->right, axis);
                 // copy the data directly
                 root->p=successor->p;
                 // deal the right tree
@@ -98,8 +99,24 @@ private:
 
     // [NOTE]: we need to find the min node of the axis in subtree node
     KDNode* findMin(KDNode* node, int axis) {
-        while(node && node->left) node=node->left;
-        return node;
+        if(!node) return nullptr;
+        
+        // the smaller one could be at both children subtrees 
+        if(node->axis != axis) {
+            KDNode* lf=findMin(node->left, axis);
+            KDNode* rt=findMin(node->right, axis);
+            if(!lf && !rt) return node;
+            else if(!lf) return rt;
+            else if(!rt) return lf;
+            else if(lf->p.coords[axis] < rt->p.coords[axis]) {
+                // the root node may have the smallest value at axis
+                return lf->p.coords[axis] < node->p.coords[axis]? lf: node;
+            }
+            return rt->p.coords[axis] < node->p.coords[axis]?rt:node;
+        }
+
+        KDNode* min=findMin(node->left, axis);
+        return min? min: node;
     }
 
     KDNode* insertRecur(const Point& p, KDNode* root, int axis) {
@@ -131,10 +148,13 @@ private:
         // Find the medium and sort the range roughly
         // Time Complexity: O(N)
         // rearrange the vector so that n_element is at this position
+        #if 0
         std::nth_element(points.begin()+l, points.begin()+mid, points.begin()+r+1,
                          [&axis](const Point& a, const Point& b) {
                              return a.coords[axis] < b.coords[axis];
                          });
+        #endif
+        nth_element(points, l, mid, r, axis);
         KDNode* root = new KDNode(points[mid], axis);
 
         // dfs: O(N)
@@ -150,8 +170,23 @@ private:
     }
 
     // The following implementation is for std::n_element
+    void nth_element(std::vector<Point>& arr, int l, int n, int r, int axis) {
+        int pt=-1;
+        while(true) {
+            pt=partition(arr, l, r, axis);
+            if(pt==n) {
+                break;
+            }else if(pt<n) {
+                l=pt+1;
+            }else {
+                r=pt-1;
+            }
+        }
+    }
+
     int partition(std::vector<Point>& arr, int l, int r, int axis) {
-        //int m=l+(r-l)>>1;
+        if(l>=r) return l;
+
         int pivot=selectPivot(arr, l, r, axis);
         // invariant: [l, i) <= pivot, [i, j) unknown, [j, r]>=pivot
         int i=l, j=r+1;
@@ -289,21 +324,21 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
         REQUIRE(kdTree.GetTree()==res);
    }
 
-    SECTION("delete1") {
+    SECTION("delete non-existed node") {
         REQUIRE(kdTree.Delete({std::vector<int>{5, 4}, 4})==true);
         REQUIRE(kdTree.Delete({std::vector<int>{7, 2}, 1})==true);
         REQUIRE(kdTree.Delete({std::vector<int>{11, 2}, 1})==false);
         REQUIRE(kdTree.Delete({std::vector<int>{7, 20}, 1})==false);
     }
 
-   SECTION("delete2") {
+   SECTION("delete node with both children") {
         REQUIRE(kdTree.Delete( {std::vector<int>{5, 4}, 4})==true);
         std::vector<Point> res = {
-            {std::vector<int>{8, 1}, 3},
+            {std::vector<int>{7, 2}, 1},
             {std::vector<int>{2, 3}, 6},
             {std::vector<int>{4, 7}, 5},
-            {std::vector<int>{7, 2}, 1},
             {std::vector<int>{9, 6}, 2},
+            {std::vector<int>{8, 1}, 3},
         };
         REQUIRE(kdTree.GetTree()==res);
 
@@ -316,4 +351,28 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
         };
         REQUIRE(kdTree.GetTree()==res);
    }
+
+    SECTION("delete node without children") {
+        REQUIRE(kdTree.Delete({std::vector<int>{4, 7}, 5})==true);
+        std::vector<Point> res = {
+            {std::vector<int>{5, 4}, 4},
+            {std::vector<int>{2, 3}, 6},
+            //{std::vector<int>{4, 7}, 5},
+            {std::vector<int>{7, 2}, 1},
+            {std::vector<int>{8, 1}, 3},
+            {std::vector<int>{9, 6}, 2},
+        };
+    }
+
+    SECTION("delete node with one child") {
+        REQUIRE(kdTree.Delete({std::vector<int>{2, 3}, 6})==true);
+        std::vector<Point> res = {
+            {std::vector<int>{5, 4}, 4},
+            //{std::vector<int>{2, 3}, 6},
+            {std::vector<int>{4, 7}, 5},
+            {std::vector<int>{7, 2}, 1},
+            {std::vector<int>{8, 1}, 3},
+            {std::vector<int>{9, 6}, 2},
+        };
+    }
 }
