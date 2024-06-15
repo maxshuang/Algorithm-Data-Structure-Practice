@@ -1,5 +1,6 @@
 #include <vector>
 #include <functional>
+#include <limits>
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -20,6 +21,15 @@ struct Point {
     }
 };
 
+double distance(const Point& p1, const Point& p1) {
+    double dist=0.0;
+    for(int i=0; i<p1.coords.size(); ++i) {
+        dist=std::power(p1.coords[i]-p2.coords[i], 2);
+    }
+
+    return std::sqrt(dist);
+}
+
 struct KDNode {
     Point p;
     int axis;
@@ -27,6 +37,42 @@ struct KDNode {
     KDNode* right;
 
     KDNode(Point p, int axis=0, KDNode* left=nullptr, KDNode* right=nullptr): p(p), axis(axis), left(left), right(right){}
+};
+
+struct Bounding {
+    int left;
+    int right;
+};
+
+struct BoundingBox {
+    std::vector<Bounding> box;
+
+    BoundingBox(const std::vector<Bounding>& b): box(b){}
+
+    double Distance(const Point& p) const{
+        double dist=0.0;
+        for(int i=0; i<box.size(); ++i) {
+            if(p.coords[i]<box[i].left) {
+                dist=std::power(box[i].left-p.coords[i], 2);
+            }else if (p.coords[i]>box[i].right) {
+                dist=std::power(p.coords[i]-box[i].right, 2);
+            }
+        }
+
+        return std::sqrt(dist);
+    }
+
+    BoundingBox TrimLeft(const Point& p, int axis) const{
+        BoundingBox tmp = this;
+        tmp.box[axis].right=p.coords[axis];
+        return tmp;
+    } 
+
+    BoundingBox TrimRight(const Point& p, int axis) const{
+        BoundingBox tmp = this;
+        tmp.box[axis].left=p.coords[axis];
+        return tmp;
+    }
 };
 
 class KDTree {
@@ -54,6 +100,23 @@ public:
         return deleteRecur(p, tree, tree->axis);
     }
 
+    // Nearest Neighbor Search
+    // This is the prune branch problem
+    // https://courses.cs.washington.edu/courses/cse373/02au/lectures/lecture22l.pdf
+    Point NNSearch(const Point& p) const {
+        Point nearest;
+        double bestDist=std::numeric_limits<double>::max();
+        // how to initialize the origin bounding box
+        BoundingBox bb;
+        NNSearchRecur(tree, p, tree->axis, bb, nearest, bestDist);
+        return nearest;
+    }
+
+    // K-Nearest Neighbor Search
+    std::vector<int> KNNSearch(const Point& p) const {
+
+    }
+
     std::vector<Point> GetTree() const {
         std::vector<Point> points;
         getTree(tree, points);
@@ -62,6 +125,26 @@ public:
     }
 
 private:
+    void NNSearchRecur(KDNode* node, const Point& p, int axis, const BoundingBox& bb, Point& nearest, double& bestDist) {
+        // prune branch
+        if(!node || bb.Distance(p) > bestDist) return;
+    
+        double dist=distance(node->p, p);
+        if(dist < bestDist) {
+            bestDist=dist;
+            nearest=node->p;
+        }
+    
+        // visit the most promising side first
+        if(p.coords[axis] < node->p.coords[axis]) {
+            NNSearchRecur(node->left, p, nextAxis(axis), bb.TrimLeft(node->p, axis), nearest, bestDist);
+            NNSearchRecur(node->right, p, nextAxis(axis), bb.TrimRight(node->p, axis), nearest, bestDist);
+        }else {
+            NNSearchRecur(node->right, p, nextAxis(axis), bb.TrimRight(node->p, axis), nearest, bestDist);
+            NNSearchRecur(node->left, p, nextAxis(axis), bb.TrimLeft(node->p, axis), nearest, bestDist);
+        }
+    }
+
     bool deleteRecur(const Point& p, KDNode*& root, int axis) {
         if(!root) return false; // miss
 
