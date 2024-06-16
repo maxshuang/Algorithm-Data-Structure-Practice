@@ -110,7 +110,6 @@ private:
     BoundingBox orgBB;
 
 public:
-    // [NOTE]: don't input empty set
     KDTree(std::vector<Point>& arr, int dims): tree(nullptr), size(arr.size()), 
         curAxis(0), axisCnt(dims), orgBB(dims) {
         tree = divideRecur(arr, 0, arr.size()-1, curAxis);
