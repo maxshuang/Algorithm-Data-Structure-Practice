@@ -1,6 +1,8 @@
 #include <vector>
 #include <functional>
 #include <limits>
+#include <queue>
+#include <algorithm>
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -10,6 +12,7 @@ struct Point {
     std::vector<int> coords;
     int id;
 
+    Point(): coords({}), id(-1){}
     Point(const std::vector<int>& c, int id) : coords(c), id(id) {}
 
     bool operator<(const Point& other) const {
@@ -21,10 +24,10 @@ struct Point {
     }
 };
 
-double distance(const Point& p1, const Point& p1) {
+double distance(const Point& p1, const Point& p2) {
     double dist=0.0;
-    for(int i=0; i<p1.coords.size(); ++i) {
-        dist=std::power(p1.coords[i]-p2.coords[i], 2);
+    for(size_t i=0; i<p1.coords.size(); ++i) {
+        dist+=std::pow(p1.coords[i]-p2.coords[i], 2);
     }
 
     return std::sqrt(dist);
@@ -42,20 +45,43 @@ struct KDNode {
 struct Bounding {
     int left;
     int right;
+
+    Bounding(): left(std::numeric_limits<int>::min()), 
+        right(std::numeric_limits<int>::max()){}
+
+    Bounding(int l, int r): left(l), right(r) {}
 };
 
 struct BoundingBox {
     std::vector<Bounding> box;
 
-    BoundingBox(const std::vector<Bounding>& b): box(b){}
+    BoundingBox(int dims): box(dims){}
+    BoundingBox(const Point& p): box(p.coords.size()){
+        for(size_t i=0; i<p.coords.size(); ++i) {
+            box[i].left=p.coords[i];
+            box[i].right=p.coords[i];
+        }
+    }
+
+    void updateBounding(const Point& p) {
+        // update all axis
+        for(size_t i=0; i<p.coords.size(); ++i) {
+            if(box[i].left > p.coords[i]) {
+                box[i].left = p.coords[i];
+            }
+            if(box[i].right < p.coords[i]) {
+                box[i].right = p.coords[i];
+            }
+        }
+    }
 
     double Distance(const Point& p) const{
         double dist=0.0;
-        for(int i=0; i<box.size(); ++i) {
+        for(size_t i=0; i<box.size(); ++i) {
             if(p.coords[i]<box[i].left) {
-                dist=std::power(box[i].left-p.coords[i], 2);
+                dist+=std::pow(box[i].left-p.coords[i], 2);
             }else if (p.coords[i]>box[i].right) {
-                dist=std::power(p.coords[i]-box[i].right, 2);
+                dist+=std::pow(p.coords[i]-box[i].right, 2);
             }
         }
 
@@ -63,13 +89,13 @@ struct BoundingBox {
     }
 
     BoundingBox TrimLeft(const Point& p, int axis) const{
-        BoundingBox tmp = this;
+        BoundingBox tmp = *this;
         tmp.box[axis].right=p.coords[axis];
         return tmp;
     } 
 
     BoundingBox TrimRight(const Point& p, int axis) const{
-        BoundingBox tmp = this;
+        BoundingBox tmp = *this;
         tmp.box[axis].left=p.coords[axis];
         return tmp;
     }
@@ -78,11 +104,15 @@ struct BoundingBox {
 class KDTree {
 private:
     KDNode* tree;
+    int size;
     int curAxis;
     int axisCnt;
+    BoundingBox orgBB;
 
 public:
-    KDTree(std::vector<Point>& arr): tree(nullptr), curAxis(0), axisCnt(arr[0].coords.size()) {
+    // [NOTE]: don't input empty set
+    KDTree(std::vector<Point>& arr, int dims): tree(nullptr), size(arr.size()), 
+        curAxis(0), axisCnt(dims), orgBB(dims) {
         tree = divideRecur(arr, 0, arr.size()-1, curAxis);
     }
 
@@ -91,6 +121,7 @@ public:
     }
 
     void Insert(const Point& p) {
+        orgBB.updateBounding(p);
         tree = insertRecur(p, tree, tree->axis);
     }
 
@@ -100,21 +131,41 @@ public:
         return deleteRecur(p, tree, tree->axis);
     }
 
+    // Time Complexity: O(N)
     // Nearest Neighbor Search
     // This is the prune branch problem
     // https://courses.cs.washington.edu/courses/cse373/02au/lectures/lecture22l.pdf
     Point NNSearch(const Point& p) const {
         Point nearest;
         double bestDist=std::numeric_limits<double>::max();
-        // how to initialize the origin bounding box
-        BoundingBox bb;
-        NNSearchRecur(tree, p, tree->axis, bb, nearest, bestDist);
+        NNSearchRecur(tree, p, tree->axis, orgBB, nearest, bestDist);
         return nearest;
     }
 
     // K-Nearest Neighbor Search
-    std::vector<int> KNNSearch(const Point& p) const {
+    // Same as NNSearch, the key point is using kth min to prune branches quickly 
+    // O(N)
+    typedef std::pair<double, KDNode*> DistNodePair;
+    struct DistNodeCmp {
+        bool operator()(const DistNodePair& lf, const DistNodePair& rt) const{
+            return lf.first < rt.first;
+        };
+    };
+    typedef std::priority_queue<DistNodePair, std::vector<DistNodePair>, 
+        DistNodeCmp> MAXPQ;
 
+    std::vector<Point> KNNSearch(const Point& p, int k) const {
+        // max heap, maintain pq with k size to prune branches
+        MAXPQ pq;
+        KNNSearchRecur(tree, p, tree->axis, orgBB, pq, k);
+        
+        std::vector<Point> knn;
+        while(!pq.empty()) {
+            knn.push_back(pq.top().second->p);
+            pq.pop();
+        }
+        std::reverse(knn.begin(), knn.end());
+        return knn;
     }
 
     std::vector<Point> GetTree() const {
@@ -124,8 +175,13 @@ public:
         return points;
     }
 
+    int Size() const {
+        return size;
+    }
+
 private:
-    void NNSearchRecur(KDNode* node, const Point& p, int axis, const BoundingBox& bb, Point& nearest, double& bestDist) {
+    void NNSearchRecur(KDNode* node, const Point& p, int axis, const BoundingBox& bb, 
+        Point& nearest, double& bestDist) const{
         // prune branch
         if(!node || bb.Distance(p) > bestDist) return;
     
@@ -142,6 +198,30 @@ private:
         }else {
             NNSearchRecur(node->right, p, nextAxis(axis), bb.TrimRight(node->p, axis), nearest, bestDist);
             NNSearchRecur(node->left, p, nextAxis(axis), bb.TrimLeft(node->p, axis), nearest, bestDist);
+        }
+    }
+
+    void KNNSearchRecur(KDNode* node, const Point& p, int axis, const BoundingBox& bb, 
+        MAXPQ& pq, int k) const{
+        if(!node) return;
+        // prune branch
+        if((int)pq.size()>=k && bb.Distance(p)>pq.top().first) return;
+
+        double dist=distance(node->p, p);
+        if((int)pq.size()<k) {
+            pq.push(DistNodePair{dist, node});
+        }else if(dist < pq.top().first){
+            pq.pop();
+            pq.push(DistNodePair{dist, node});
+        }
+    
+        // visit the most promising side first
+        if(p.coords[axis] < node->p.coords[axis]) {
+            KNNSearchRecur(node->left, p, nextAxis(axis), bb.TrimLeft(node->p, axis), pq, k);
+            KNNSearchRecur(node->right, p, nextAxis(axis), bb.TrimRight(node->p, axis), pq, k);
+        }else {
+            KNNSearchRecur(node->right, p, nextAxis(axis), bb.TrimRight(node->p, axis), pq, k);
+            KNNSearchRecur(node->left, p, nextAxis(axis), bb.TrimLeft(node->p, axis), pq, k);
         }
     }
 
@@ -249,7 +329,6 @@ private:
 
     KDNode* divideRecur(std::vector<Point>& points, int l, int r, int axis) {
         if(l>r) return nullptr;
-        if(l==r) return new KDNode(points[l], axis);
 
         int mid = l+((r-l)>>1);
         // Find the medium and sort the range roughly
@@ -261,8 +340,12 @@ private:
                              return a.coords[axis] < b.coords[axis];
                          });
         #endif
-        nth_element(points, l, mid, r, axis);
+
+        // pre-order
+        if(l<r)
+            nth_element(points, l, mid, r, axis);
         KDNode* root = new KDNode(points[mid], axis);
+        orgBB.updateBounding(points[mid]);
 
         // dfs: O(N)
         int nAxis=nextAxis(curAxis);
@@ -272,7 +355,7 @@ private:
         return root;
     }
 
-    int nextAxis(int curAxis) {
+    int nextAxis(int curAxis) const {
         return (++curAxis)%axisCnt;
     }
 
@@ -353,7 +436,7 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
         {std::vector<int>{2, 3}, 6},
     };
 
-    KDTree kdTree(points);
+    KDTree kdTree(points, 2);
 
     /*
     //        <5, 4>
@@ -535,5 +618,45 @@ TEST_CASE("Test K-Dimensional tree", "create/insert/delete") {
             {std::vector<int>{9, 6}, 2},
         };
         REQUIRE(kdTree.GetTree()==res);
+    }
+
+    /*
+    //        <5, 4>
+    //        /    \   
+    //    <2, 3>   <7, 2>
+    //        \    /     \
+    //    <4, 7>  <8, 1>  <9, 6>
+    */
+    SECTION("Nearest Neighbor Search, on the same side") {
+        REQUIRE(kdTree.NNSearch(Point{{4, 6}, 21})==Point{{4, 7}, 5});
+    }
+
+    SECTION("Nearest Neighbor Search, not on the same side") {
+        REQUIRE(kdTree.NNSearch(Point{{10, 3}, 22})==Point{{8, 1}, 3});
+    }
+
+    SECTION("Nearest Neighbor Search, exact point") {
+        REQUIRE(kdTree.NNSearch(Point{{7, 2}, 1})==Point{{7, 2}, 1});
+    }
+
+    SECTION("K Nearest Neighbor Search, all nodes") {
+        REQUIRE(kdTree.KNNSearch(Point{{4, 6}, 21}, kdTree.Size())==
+            std::vector<Point>{
+                {std::vector<int>{4, 7}, 5},
+                {std::vector<int>{5, 4}, 4},
+                {std::vector<int>{2, 3}, 6},
+                {std::vector<int>{9, 6}, 2},
+                {std::vector<int>{7, 2}, 1},
+                {std::vector<int>{8, 1}, 3},
+            });
+    }
+
+    SECTION("K Nearest Neighbor Search, k=3") {
+        REQUIRE(kdTree.KNNSearch(Point{{10, 3}, 22}, 3)==
+            std::vector<Point>{
+                {std::vector<int>{8, 1}, 3},
+                {std::vector<int>{9, 6}, 2},
+                {std::vector<int>{7, 2}, 1},
+            });
     }
 }
