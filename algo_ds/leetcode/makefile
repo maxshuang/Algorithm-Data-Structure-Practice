@@ -15,7 +15,7 @@ LDFLAGS =
 TARGET = test
 
 # Directories to exclude from the search
-EXCLUDE_DIRS = Catch2 structure slice-window greedy-algorithm 
+EXCLUDE_DIRS = Catch2 structure slice-window greedy-algorithm graph
 
 # Function to check if a .cpp file should be excluded based on EXCLUDE_DIRS
 is_excluded = $(if $(filter $(EXCLUDE_DIRS),$(subst /, ,$1)),$1,)

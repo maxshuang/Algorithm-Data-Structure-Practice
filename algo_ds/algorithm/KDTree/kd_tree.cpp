@@ -101,6 +101,13 @@ struct BoundingBox {
     }
 };
 
+struct CircleBox {
+    Point center;
+    double radius;
+
+    CircleBox(const Point& c, double r): center(c), radius(r){}
+};
+
 class KDTree {
 private:
     KDNode* tree;
@@ -165,6 +172,16 @@ public:
         }
         std::reverse(knn.begin(), knn.end());
         return knn;
+    }
+
+    std::vector<Point> RangeQuery(const BoundingBox& range) const {
+        // [TODO]
+        return std::vector<Point>{};
+    }
+
+    std::vector<Point> RangeQuery(const CircleBox& range) const {
+        // [TODO]
+        return std::vector<Point>{};
     }
 
     std::vector<Point> GetTree() const {
