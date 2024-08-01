@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <iostream>
 
 class LRU {
 public:
@@ -26,7 +27,7 @@ private:
     std::unordered_map<int, Item*> mapInner;
 };
 
-LRU::LRU(int cap):cap(cap), cnt(0), end(nullptr){
+LRU::LRU(int cap):cap(cap), cnt(0), tail(nullptr){
 }
 
 LRU::~LRU(){
@@ -48,7 +49,7 @@ int LRU::get(int key) {
 void LRU::set(int key, int val) {
     if(mapInner.count(key)) {
         adjust(mapInner[key]);
-        mapInner[key]=val;
+        mapInner[key]->val=val;
         return;
     }
 
@@ -59,9 +60,13 @@ void LRU::set(int key, int val) {
 
     // insert into the list head
     nit->nxt=head.nxt;
-    if(cnt>0) head.nxt->pre=it;
-    head.nxt=it;
+    if(cnt>0) head.nxt->pre=nit;
+    head.nxt=nit;
+    nit->pre=&head;
+    mapInner[key] = nit;
     ++cnt;
+
+    std::cout << "set" << std::endl; 
 
     // check if overflow, if so, remove the last one
     if(cnt>cap) {
@@ -75,7 +80,7 @@ void LRU::set(int key, int val) {
 } 
 
 void LRU::adjust(Item* it) {
-    if(cnt<=1 && it->pre==&head) return;
+    if(cnt<=1 || it->pre==&head) return;
 
     if(it==tail) tail=it->pre;
 
@@ -87,4 +92,24 @@ void LRU::adjust(Item* it) {
     it->nxt=head.nxt;
     head.nxt->pre=it;
     head.nxt=it;
+    it->pre=&head;
+}
+ 
+int main() {
+    LRU lru(3);
+    std::cout << "-1==" << lru.get(1) << std::endl;
+    lru.set(1, 1);
+    std::cout << "1==" << lru.get(1) << std::endl;
+    lru.set(2, 2);
+    std::cout << "2==" << lru.get(2) << std::endl;
+    std::cout << "1==" << lru.get(1) << std::endl;
+    lru.set(3, 3);
+    std::cout << "3==" << lru.get(3) << std::endl;
+    std::cout << "2==" << lru.get(2) << std::endl;
+    std::cout << "1==" << lru.get(1) << std::endl;
+    lru.set(4, 4);
+    std::cout << "4==" << lru.get(4) << std::endl;
+    std::cout << "-1==" << lru.get(3) << std::endl;
+    std::cout << "2==" << lru.get(2) << std::endl;
+    std::cout << "1==" << lru.get(1) << std::endl;
 }
