@@ -5,7 +5,9 @@ class LRU {
 public:
     LRU(int cap);
     ~LRU();
+    // Time Complexity: O(1)
     int get(int key);
+    // Time Complexity: O(1)
     void set(int key, int val);
 private:
     struct Item {
@@ -65,8 +67,6 @@ void LRU::set(int key, int val) {
     nit->pre=&head;
     mapInner[key] = nit;
     ++cnt;
-
-    std::cout << "set" << std::endl; 
 
     // check if overflow, if so, remove the last one
     if(cnt>cap) {

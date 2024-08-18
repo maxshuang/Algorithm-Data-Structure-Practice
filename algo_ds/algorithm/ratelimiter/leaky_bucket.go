@@ -10,6 +10,8 @@ import (
 // Time Complexity: O(1), Space Complexity: O(1)
 // Leaky bucket designs for reshaping traffic and traffic control, the rate range is [0, rate]
 
+// 这个实现有问题!!!
+
 type LeakyBucket struct {
 	mu         sync.Mutex
 	rate       int // rate/s

@@ -82,6 +82,7 @@ Data Structures: Certain data structures like binary indexed trees (also known a
 inline int bitmap_msb(int N) {
     int b=N;
     int msb=0;
+    // 这个比较好理解，本质上是数 1
     while(b) {
         msb=b;
         b&=(b-1);
@@ -102,6 +103,7 @@ inline int bitmap_msb2(int M) {
 
 // find the least significant bit number
 inline int bitmap_lsb(int N) {
+    // 这个利用地位清 0 + 异或
     return N^(N&(N-1));
 }
 
