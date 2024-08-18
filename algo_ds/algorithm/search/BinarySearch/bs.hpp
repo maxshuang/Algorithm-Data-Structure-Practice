@@ -59,7 +59,7 @@ int floor(std::vector<int>& vec, int target) {
 }
 
 // the first one that is not larger than target
-int ceiling(std::vector<int>& vec, int target) {
+int ceilling(std::vector<int>& vec, int target) {
     int p=upper_bound(vec, target);
     // 0, -1, others
     if(p==0) return -1;

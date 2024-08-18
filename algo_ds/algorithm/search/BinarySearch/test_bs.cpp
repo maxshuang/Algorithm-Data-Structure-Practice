@@ -90,7 +90,7 @@ TEST_CASE("Test ceilling", "")
     }
 
     SECTION("all larger") {
-        REQUIRE(ceilling(vec, -1)==-1;
+        REQUIRE(ceilling(vec, -1)==-1);
         REQUIRE(ceilling(vec, -2)==-1);
     }
 
