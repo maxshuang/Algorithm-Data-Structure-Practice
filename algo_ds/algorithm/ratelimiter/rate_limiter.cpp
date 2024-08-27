@@ -311,6 +311,117 @@ void Test_CornerCase2_SlidingWinCounter() {
 	  std::cout << (rl->IsAllowed() == true) << std::endl;
 }
 
+class TokenBucketRateLimiter : public RateLimiter {
+public:
+    TokenBucketRateLimiter(int cap, int rate, int winMillis);
+    virtual bool IsAllowed(); 
+    virtual ~TokenBucketRateLimiter() = default;
+private:
+    Clock clock;
+    int tokens;
+    int64_t curMillis;
+    const int rate; // pre winMillis
+    const int cap;
+    const int winMillis;
+
+    void refill();
+};
+
+TokenBucketRateLimiter::TokenBucketRateLimiter(int cap, int rate, int winMillis):
+tokens(0), curMillis(clock.getUnixTimeMillis()), rate(rate), cap(cap), winMillis(winMillis){}
+
+void TokenBucketRateLimiter::refill() {
+    // greedy, not interval-based
+    // for interval-based algorithm, you can just jump to the last interval previous to nowMillis
+    int64_t nowMillis = clock.getUnixTimeMillis();
+    tokens= std::min(cap, (int)(rate*(nowMillis-curMillis)/(double)winMillis));
+    curMillis=nowMillis;
+}
+
+bool TokenBucketRateLimiter::IsAllowed() {
+    // lazy refill
+    if(tokens==0) refill();
+
+    if(tokens>0) {
+        --tokens;
+        return true;
+    }
+
+    return false;
+}
+
+void Test_CornerCase2_TokenBucket() {
+    std::cout << "corner case 2: handle burst traffic" << std::endl;
+    auto rl = std::make_unique<TokenBucketRateLimiter>(5, 1, 500);
+    sleep(1);
+    std::cout << (rl->IsAllowed() == true) << std::endl; 
+    std::cout << (rl->IsAllowed() == true) << std::endl;
+    // consume up all buckets
+    std::cout << (rl->IsAllowed() == false) << std::endl;
+    sleep(3);
+    for(int i=0; i<5; ++i) rl->IsAllowed();
+    // reach the cap
+    std::cout << (rl->IsAllowed() == false) << std::endl;
+    sleep(1); // 1s
+	  std::cout << (rl->IsAllowed() == true) << std::endl;
+    std::cout << (rl->IsAllowed() == true) << std::endl;
+}
+
+class LeakyBucketRateLimiter : public RateLimiter {
+public:
+    LeakyBucketRateLimiter(int cap, int leakRate, int winMillis);
+    virtual bool IsAllowed(); 
+    virtual ~LeakyBucketRateLimiter() = default;
+private:
+    Clock clock;
+    int waterLevel;
+    int64_t curMillis;
+    const int cap;
+    const int leakRate; // pre winMillis
+    const int winMillis;
+
+    void leak();
+};
+
+LeakyBucketRateLimiter::LeakyBucketRateLimiter(int cap, int leakRate, int winMillis): waterLevel(0),
+curMillis(clock.getUnixTimeMillis()), cap(cap), leakRate(leakRate), winMillis(winMillis){}
+
+void LeakyBucketRateLimiter::leak() {
+    int64_t nowMillis=clock.getUnixTimeMillis();
+    int leakTokens = (int)(((nowMillis-curMillis)/(double)winMillis)*leakRate);
+    
+    std::cout << "leak tokens:" << leakTokens << std::endl;
+    if(leakTokens>0) {
+        waterLevel=std::max(0, waterLevel-leakTokens);
+        curMillis=nowMillis;
+    }
+}
+
+bool LeakyBucketRateLimiter::IsAllowed() {
+    // lazy leak
+    if(waterLevel==cap) leak();
+
+    if(waterLevel<cap) {
+        ++waterLevel;
+        return true;
+    }
+
+    return false;
+}
+
+void Test_CornerCase2_LeakyBucket() {
+    std::cout << "corner case 2: handle burst traffic" << std::endl;
+    auto rl = std::make_unique<LeakyBucketRateLimiter>(5, 1, 500);
+    for(int i=0; i<5; ++i) rl->IsAllowed();
+    std::cout << (rl->IsAllowed() == false) << std::endl; 
+    sleep(1);
+    std::cout << (rl->IsAllowed() == true) << std::endl; 
+    std::cout << (rl->IsAllowed() == true) << std::endl;
+    std::cout << (rl->IsAllowed() == false) << std::endl;
+    // bucket is full
+    std::cout << (rl->IsAllowed() == false) << std::endl;
+}
+
 int main() {
   //Test_Normal_FixWin();
   //Test_CornerCase1_FixWin();
@@ -320,9 +431,13 @@ int main() {
   //Test_CornerCase1_SlidingWin();
   //Test_CornerCase2_SlidingWin();
   
-  Test_Normal_SlidingWinCounter();
-  Test_CornerCase1_SlidingWinCounter();
-  Test_CornerCase2_SlidingWinCounter();
+  //Test_Normal_SlidingWinCounter();
+  //Test_CornerCase1_SlidingWinCounter();
+  //Test_CornerCase2_SlidingWinCounter();
+  
+  //Test_CornerCase2_TokenBucket();
+  
+  Test_CornerCase2_LeakyBucket();
   
   return 0;
 }
