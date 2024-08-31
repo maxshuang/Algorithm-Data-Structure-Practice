@@ -87,10 +87,18 @@ vector<string> FileProcessingTopK::fileProcessing(vector<FileInfo> lists, int to
     return res; 
 }
 
+void print(const std::vector<string>& vec) {
+   std::cout << "[";
+   for(auto& str: vec) std::cout << str << ",";
+   std::cout << "]";
+}
+
 int main() {
-    vector<FileInfo> lists{{"file1.txt", 100, {}}, {"file2.txt", 200,    {"collection1"}},{"file3.txt", 200, {"collection1"}}, {"file4.txt", 300, {"collection2"}}, {"file5.txt", 100, {}}};
+    // collection1: 400, collection2: 300, collection3: 200
+    vector<FileInfo> lists{{"file1.txt", 100, {}}, {"file2.txt", 200,    {"collection1", "collection3"}},{"file3.txt", 200, {"collection1"}}, {"file4.txt", 300, {"collection2"}}, {"file5.txt", 100, {}}};
     
     FileProcessingTopK fp;
     auto res = fp.fileProcessing(lists, 2);
+    //print(res);
     ASSERT_OR_PRINT((res==vector<string>{"collection2", "collection1"}), "fail");
 }
