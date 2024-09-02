@@ -18,8 +18,12 @@ public:
     // compress the depth to 1
     int find(int node) {
         if (parent[node] != node) {
+            // not the root node, recurse untill we get the root node
+            // and return to set all nodes along the path
             parent[node] = find(parent[node]); // Path compression: point to the root
         }
+
+        // need to return parent[node], this is the root node now
         return parent[node];
     }
 
