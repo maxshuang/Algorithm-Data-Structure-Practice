@@ -1,5 +1,4 @@
-//const marked1 = require('marked');
-
+// check if needs preload
 const markdownView = document.querySelector('#markdown');
 const htmlView = document.querySelector('#html');
 const newFileButton = document.querySelector('#new-file');
@@ -18,3 +17,19 @@ markdownView.addEventListener('keyup', (event) => {
   const currentContent = event.target.value;
   renderMarkdownToHtml(currentContent);
 });
+
+openFileButton.addEventListener('click', () => {
+  // remote calls the main process 
+  window.electron.openFileDialog();
+});
+
+// result is an object here {error:xxx, file:xxx, content:xxx}
+window.electron.onFileSelected((result)=> {
+  if (result.error) {
+    // Handle error
+    console.error(result.error);
+  } else {
+    markdownView.value = result.content;
+    renderMarkdownToHtml(result.content);
+  }
+})

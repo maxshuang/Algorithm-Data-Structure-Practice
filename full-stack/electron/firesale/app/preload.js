@@ -1,8 +1,16 @@
 // preload.js
 console.log('preload script loaded');
-const { contextBridge } = require('electron');
-//const path = require('path');
+const { contextBridge, ipcRenderer } = require('electron');
 const marked = require('marked');
 
 contextBridge.exposeInMainWorld('marked', marked);
-//contextBridge.exposeInMainWorld('appDir', path.resolve(__dirname));
+
+// register an object to render process
+contextBridge.exposeInMainWorld('electron', {
+    // send event to main process
+    openFileDialog: () => ipcRenderer.send('open-file-dialog'),
+    // receive event from main process
+    onFileSelected: (func) => {
+      ipcRenderer.on('file-selected', (event, result) => func(result))
+    }
+});
