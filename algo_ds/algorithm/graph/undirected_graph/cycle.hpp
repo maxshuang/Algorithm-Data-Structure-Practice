@@ -40,6 +40,8 @@ private:
                 // because edge of undirected graph is bidirected, 
                 // so if we find out this edge is not the original edge, 
                 // we know it has a cycle.
+                // [NOTE]: tricky here, it's better to use the edge_to_ to judge the cycle for more clear intention
+                // since it's the undirected graph, from != e.Dest() is enough here
                 has_cycle_=true;
                 // construct a cycle
                 edge_to_[e.Dest()]=e.Src();

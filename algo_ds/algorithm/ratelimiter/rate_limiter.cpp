@@ -335,7 +335,8 @@ void TokenBucketRateLimiter::refill() {
     // for interval-based algorithm, you can just jump to the last interval previous to nowMillis
     int64_t nowMillis = clock.getUnixTimeMillis();
     tokens= std::min(cap, (int)(rate*(nowMillis-curMillis)/(double)winMillis));
-    curMillis=nowMillis;
+    if(tokens>0)
+        curMillis=nowMillis;
 }
 
 bool TokenBucketRateLimiter::IsAllowed() {
@@ -390,7 +391,6 @@ void LeakyBucketRateLimiter::leak() {
     int64_t nowMillis=clock.getUnixTimeMillis();
     int leakTokens = (int)(((nowMillis-curMillis)/(double)winMillis)*leakRate);
     
-    std::cout << "leak tokens:" << leakTokens << std::endl;
     if(leakTokens>0) {
         waterLevel=std::max(0, waterLevel-leakTokens);
         curMillis=nowMillis;
@@ -399,7 +399,10 @@ void LeakyBucketRateLimiter::leak() {
 
 bool LeakyBucketRateLimiter::IsAllowed() {
     // lazy leak
-    if(waterLevel==cap) leak();
+    //if(waterLevel==cap) leak();
+
+    // should call leak at each requests to avoid bursty traffic
+    leak(); 
 
     if(waterLevel<cap) {
         ++waterLevel;
